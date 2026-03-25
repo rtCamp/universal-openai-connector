@@ -362,6 +362,8 @@ The plugin can be network-activated on multisite. Each site's settings are manag
 
 ## License
 
-[GPL-2.0-or-later](https://spdx.org/licenses/GPL-2.0-or-later.html) © [rtCamp](https://rtcamp.com)
+This project is licensed under the GPL v2 or later — see the [LICENSE](LICENSE) file for details.
+
+---
 
 **Made with ❤️ by [rtCamp](https://rtcamp.com/)**
