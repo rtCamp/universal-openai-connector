@@ -28,11 +28,11 @@ class OpenAiCompatibleProviderAvailability implements ProviderAvailabilityInterf
 
 		$registry = \WordPress\AiClient\AiClient::defaultRegistry();
 
-		if ( ! $registry->hasProvider( 'openai-compatible' ) ) {
+		if ( ! $registry->hasProvider( 'openai_compatible' ) ) {
 			return false;
 		}
 
-		$auth = $registry->getProviderRequestAuthentication( 'openai-compatible' );
+		$auth = $registry->getProviderRequestAuthentication( 'openai_compatible' );
 		if ( null === $auth ) {
 			return false;
 		}

@@ -567,8 +567,8 @@ class OpenAiCompatibleSettings {
 	private static function get_api_key(): string {
 		if ( class_exists( AiClient::class ) ) {
 			$registry = AiClient::defaultRegistry();
-			if ( $registry->hasProvider( 'openai-compatible' ) ) {
-				$auth = $registry->getProviderRequestAuthentication( 'openai-compatible' );
+			if ( $registry->hasProvider( 'openai_compatible' ) ) {
+				$auth = $registry->getProviderRequestAuthentication( 'openai_compatible' );
 				if ( $auth instanceof ApiKeyRequestAuthentication ) {
 					return (string) $auth->getApiKey();
 				}

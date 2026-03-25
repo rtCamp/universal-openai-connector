@@ -69,18 +69,18 @@ class Plugin {
 
 		$registry = AiClient::defaultRegistry();
 
-		if ( ! $registry->hasProvider( 'openai-compatible' ) ) {
+		if ( ! $registry->hasProvider( 'openai_compatible' ) ) {
 			return;
 		}
 
-		$auth = $registry->getProviderRequestAuthentication( 'openai-compatible' );
+		$auth = $registry->getProviderRequestAuthentication( 'openai_compatible' );
 		if ( null !== $auth ) {
 			return;
 		}
 
 		$env_key = (string) getenv( 'OPENAI_COMPATIBLE_API_KEY' );
 		$registry->setProviderRequestAuthentication(
-			'openai-compatible',
+			'openai_compatible',
 			new ApiKeyRequestAuthentication( $env_key )
 		);
 	}

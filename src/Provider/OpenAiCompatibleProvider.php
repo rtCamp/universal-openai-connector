@@ -79,7 +79,7 @@ class OpenAiCompatibleProvider extends AbstractApiProvider {
 	 */
 	protected static function createProviderMetadata(): ProviderMetadata {
 		return new ProviderMetadata(
-			'openai-compatible',
+			'openai_compatible',
 			__( 'Universal Open AI Connector', 'universal-openai-connector' ),
 			ProviderTypeEnum::cloud(),
 			self::baseUrl(),

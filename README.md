@@ -8,7 +8,7 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Overview
 
-Universal Open AI Connector registers an `openai-compatible` provider with the WordPress AI Client so that **any OpenAI-compatible API** can power AI features across WordPress — text generation, chat, and image generation included.
+Universal Open AI Connector registers an `openai_compatible` provider with the WordPress AI Client so that **any OpenAI-compatible API** can power AI features across WordPress — text generation, chat, and image generation included.
 
 ## Description
 
@@ -144,7 +144,7 @@ If you type a model ID that is not returned by the API it will still be saved an
 use WordPress\AI_Client\Prompt_Builder;
 
 $result = Prompt_Builder::create()
-    ->using_provider( 'openai-compatible' )
+    ->using_provider( 'openai_compatible' )
     ->set_model( 'gpt-4o' ) // Any model available at your endpoint
     ->set_system_instruction( 'You are a helpful assistant.' )
     ->add_text_message( 'Write a short haiku about sunrise.' )
@@ -174,7 +174,7 @@ You can use Universal Open AI Connector for any WordPress AI Client feature that
 use WordPress\AI_Client\Prompt_Builder;
 
 $result = Prompt_Builder::create()
-    ->using_provider( 'openai-compatible' )
+    ->using_provider( 'openai_compatible' )
     ->set_model( 'dall-e-3' ) // Image generation model at your endpoint
     ->add_text_message( 'A serene mountain lake at sunset, photorealistic.' )
     ->generate_image();
@@ -200,7 +200,7 @@ Vision-capable models can accept image inputs alongside text. The plugin detects
 use WordPress\AI_Client\Prompt_Builder;
 
 $result = Prompt_Builder::create()
-    ->using_provider( 'openai-compatible' )
+    ->using_provider( 'openai_compatible' )
     ->set_model( 'gpt-4o' ) // Vision-capable model at your endpoint
     ->add_text_message( 'Describe what you see in this image.' )
     ->add_image_from_url( 'https://example.com/photo.jpg' )
@@ -302,7 +302,7 @@ It depends on the service. The official OpenAI API requires an API key. Self-hos
 
 ### Does this plugin require the WordPress AI Client plugin?
 
-Yes. The **WordPress AI Client** plugin (`ai`) must be installed and activated. This plugin registers the `openai-compatible` provider within that framework.
+Yes. The **WordPress AI Client** plugin (`ai`) must be installed and activated. This plugin registers the `openai_compatible` provider within that framework.
 
 ### Can I use local or self-hosted models?
 
