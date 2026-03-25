@@ -1,0 +1,105 @@
+<?php
+/**
+ * OpenAI Compatible provider.
+ *
+ * @since 1.0.0
+ * @package rtCamp\UniversalOpenAiConnector
+ */
+
+declare( strict_types=1 );
+
+namespace rtCamp\UniversalOpenAiConnector\Provider;
+
+use WordPress\AiClient\Providers\ApiBasedImplementation\AbstractApiProvider;
+use WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface;
+use WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface;
+use WordPress\AiClient\Providers\DTO\ProviderMetadata;
+use WordPress\AiClient\Providers\Enums\ProviderTypeEnum;
+use WordPress\AiClient\Providers\Http\Enums\RequestAuthenticationMethod;
+use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
+use WordPress\AiClient\Providers\Models\DTO\ModelMetadata;
+use rtCamp\UniversalOpenAiConnector\Metadata\OpenAiCompatibleModelMetadataDirectory;
+use rtCamp\UniversalOpenAiConnector\Models\OpenAiCompatibleImageGenerationModel;
+use rtCamp\UniversalOpenAiConnector\Models\OpenAiCompatibleTextGenerationModel;
+use rtCamp\UniversalOpenAiConnector\Settings\OpenAiCompatibleSettings;
+
+/**
+ * Class OpenAiCompatibleProvider.
+ */
+class OpenAiCompatibleProvider extends AbstractApiProvider {
+
+	private const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function baseUrl(): string {
+		$env_url = getenv( 'OPENAI_COMPATIBLE_BASE_URL' );
+		if ( false !== $env_url && '' !== trim( $env_url ) ) {
+			return rtrim( (string) $env_url, '/' );
+		}
+
+		$settings_url = OpenAiCompatibleSettings::get_endpoint_url();
+		if ( '' !== $settings_url ) {
+			return rtrim( $settings_url, '/' );
+		}
+
+		return self::DEFAULT_BASE_URL;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param \WordPress\AiClient\Providers\Models\DTO\ModelMetadata $model_metadata    The model metadata.
+	 * @param \WordPress\AiClient\Providers\DTO\ProviderMetadata     $provider_metadata The provider metadata.
+	 * @return \WordPress\AiClient\Providers\Models\Contracts\ModelInterface The created model.
+	 *
+	 * @throws \WordPress\AiClient\Common\Exception\RuntimeException If the model capabilities are unsupported.
+	 */
+	protected static function createModel( ModelMetadata $model_metadata, ProviderMetadata $provider_metadata ): ModelInterface {
+		$capabilities_string_list = $model_metadata->toArray()[ ModelMetadata::KEY_SUPPORTED_CAPABILITIES ];
+
+		if ( in_array( 'image_generation', $capabilities_string_list, true ) ) {
+			return new OpenAiCompatibleImageGenerationModel( $model_metadata, $provider_metadata );
+		}
+
+		$capabilities = $model_metadata->getSupportedCapabilities();
+		foreach ( $capabilities as $capability ) {
+			if ( $capability->isTextGeneration() ) {
+				return new OpenAiCompatibleTextGenerationModel( $model_metadata, $provider_metadata );
+			}
+		}
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message only.
+		throw new \WordPress\AiClient\Common\Exception\RuntimeException( 'Unsupported model capabilities for OpenAI compatible model: ' . $model_metadata->getId() );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function createProviderMetadata(): ProviderMetadata {
+		return new ProviderMetadata(
+			'openai-compatible',
+			__( 'Universal Open AI Connector', 'universal-openai-connector' ),
+			ProviderTypeEnum::cloud(),
+			self::baseUrl(),
+			RequestAuthenticationMethod::apiKey(),
+			__( 'Connect to any OpenAI-compatible endpoint for text and image generation.', 'universal-openai-connector' ),
+			''
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function createProviderAvailability(): ProviderAvailabilityInterface {
+		return new OpenAiCompatibleProviderAvailability();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected static function createModelMetadataDirectory(): ModelMetadataDirectoryInterface {
+		return new OpenAiCompatibleModelMetadataDirectory();
+	}
+}

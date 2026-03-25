@@ -1,0 +1,33 @@
+parameters:
+		# Rules
+		treatPhpDocTypesAsCertain: false
+		inferPrivatePropertyTypeFromConstructor: true
+		checkExplicitMixedMissingReturn: true
+		checkFunctionNameCase: true
+		checkInternalClassCaseSensitivity: true
+		checkTooWideReturnTypesInProtectedAndPublicMethods: true
+		polluteScopeWithAlwaysIterableForeach: false
+		polluteScopeWithLoopInitialAssignments: false
+		reportAlwaysTrueInLastCondition: true
+		reportStaticMethodSignatures: true
+		reportWrongPhpDocTypeInVarTag: true
+
+		# Configuration
+		level: 8
+		phpVersion:
+			min: 80100
+			max: 80400
+		bootstrapFiles:
+				- universal-openai-connector.php
+
+		paths:
+				- universal-openai-connector.php
+				- src/
+		scanDirectories:
+				- vendor/wordpress/php-ai-client/src/
+		excludePaths:
+			analyse:
+				- tests/
+				- vendor/
+			analyseAndScan:
+				- node_modules (?)

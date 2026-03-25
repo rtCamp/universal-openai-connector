@@ -1,0 +1,68 @@
+# Development and testing files
+/.github
+/.wordpress-org
+/node_modules
+/tests
+/bin
+/.editorconfig
+/.eslintignore
+/.eslintrc.json
+/.gitignore
+/.distignore
+/.stylelintignore
+/.stylelintrc.json
+/.nvmrc
+/babel.config.js
+/webpack.config.js
+/phpcs.xml.dist
+/phpstan.neon.dist
+/phpunit.xml.dist
+/tsconfig.json
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/.browserslistrc
+/.wp-env.json
+/CHANGELOG.md
+/README.md
+/CONTRIBUTING.md
+/CODE_OF_CONDUCT.md
+/SECURITY.md
+/docs
+
+# Assets source files (only include built files)
+/assets/src
+/wp-assets
+
+# Composer dependencies are development-only for this plugin.
+/vendor
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# CI/CD files
+/.github
+
+# IDE files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# macOS files
+.DS_Store
+._*
+
+# Windows files
+Thumbs.db
+desktop.ini
+
+# Test output
+/tests/_output
+
+# Generated archives
+/universal-openai-connector.zip
+*.zip

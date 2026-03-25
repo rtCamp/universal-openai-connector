@@ -1,0 +1,24 @@
+{
+	"extends": "@wordpress/stylelint-config/scss",
+	"plugins": [
+		"@stylistic/stylelint-plugin"
+	],
+	"ignoreFiles": [
+		"**/*.js",
+		"**/*.json",
+		"**/*.php",
+		"**/*.svg"
+	],
+	"rules": {
+		"selector-class-pattern": null,
+		"@stylistic/indentation": [
+			"tab",
+			{
+				"baseIndentLevel": 0,
+				"indentInsideParens": "once-at-root-twice-in-block"
+			}
+		],
+		"@stylistic/no-missing-end-of-source-newline": true,
+		"@stylistic/no-eol-whitespace": true
+	}
+}
