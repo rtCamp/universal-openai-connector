@@ -3,14 +3,14 @@
  * Plugin Name:       Universal Open AI Connector
  * Plugin URI:        https://github.com/rtcamp/universal-openai-connector
  * Description:       OpenAI-compatible provider for the WordPress AI Client with configurable endpoint and default text/image models.
- * Requires at least: 6.9
+ * Requires at least: 7.0
  * Requires PHP:      7.4
  * Requires Plugins:  ai
  * Version:           1.0.0
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later
- * License URI:       https://spdx.org/licenses/GPL-2.0-or-later.html
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       universal-openai-connector
  *
  * @package rtCamp\UniversalOpenAiConnector
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_PHP_VERSION', '7.4' );
-define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION', '6.9' );
+define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION', '7.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE', __FILE__ );
 
