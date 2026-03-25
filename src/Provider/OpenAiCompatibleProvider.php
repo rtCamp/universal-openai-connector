@@ -84,8 +84,8 @@ class OpenAiCompatibleProvider extends AbstractApiProvider {
 			ProviderTypeEnum::cloud(),
 			self::baseUrl(),
 			RequestAuthenticationMethod::apiKey(),
-			__( 'Connect to any OpenAI-compatible endpoint for text and image generation.', 'universal-openai-connector' ),
-			''
+			__( 'Access any AI service supporting the OpenAI API for text and image creation.', 'universal-openai-connector' ),
+			UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR . 'assets/images/openai-api.svg'
 		);
 	}
 
