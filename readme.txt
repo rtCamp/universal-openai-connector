@@ -54,6 +54,8 @@ This plugin provides an [OpenAI-compatible](https://platform.openai.com/docs/api
 
 1. Universal Open AI Connector provider in Connectors page showing connection status and API key field.
 2. Settings page showing API endpoint URL, default text model, and default image model dropdowns.
+3. Example of generating post excerpt using OpenRouter in the WordPress editor.
+4. Example of generating an image using OpenRouter in the WordPress editor.
 
 == Frequently Asked Questions ==
 
