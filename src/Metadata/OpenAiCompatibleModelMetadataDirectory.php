@@ -106,7 +106,7 @@ class OpenAiCompatibleModelMetadataDirectory extends AbstractApiBasedModelMetada
 				new SupportedOption( OptionEnum::inputModalities(), [ [ ModalityEnum::text() ] ] ),
 				new SupportedOption( OptionEnum::outputModalities(), [ [ ModalityEnum::image() ] ] ),
 				new SupportedOption( OptionEnum::candidateCount() ),
-				new SupportedOption( OptionEnum::outputMimeType(), [ 'image/png', 'image/jpeg', 'image/webp' ] ),
+				new SupportedOption( OptionEnum::outputMimeType(), [ 'image/png' ] ),
 				new SupportedOption( OptionEnum::outputFileType(), [ FileTypeEnum::inline(), FileTypeEnum::remote() ] ),
 				new SupportedOption(
 					OptionEnum::outputMediaOrientation(),

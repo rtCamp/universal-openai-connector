@@ -91,7 +91,9 @@ Any service that implements the OpenAI REST API (`/v1/chat/completions`, `/v1/im
 2. Clone or download this plugin into `wp-content/plugins/universal-openai-connector`.
 3. Activate **Universal Open AI Connector** from the Plugins screen.
 4. Go to **Settings → Connectors** and enter your API key for the *Universal Open AI Connector* provider.
+![screenshot-1](./wp-assets/screenshot-1.png)
 5. Go to **Settings → Universal Open AI Connector** and enter your **API Endpoint URL**.
+![screenshot-2](./wp-assets/screenshot-2.png)
 6. Optionally select a **Default Text Model** and **Default Image Model** from the auto-populated dropdowns.
 7. Save settings.
 
@@ -163,6 +165,8 @@ $result = Prompt_Builder::create()
 
 You can use Universal Open AI Connector for any WordPress AI Client feature that supports text generation, such as:
 
+![screenshot-3](./wp-assets/screenshot-3.png)
+
 - Title generation
 - Excerpt generation
 - Content summarization
@@ -191,6 +195,7 @@ $result = Prompt_Builder::create()
 #### WordPress Ability
 
 You can use Universal Open AI Connector for any WordPress AI Client feature that supports image generation.
+![screenshot-4](./wp-assets/screenshot-4.png)
 
 ### Multimodal (Vision) Input
 
