@@ -136,14 +136,19 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 	protected function createRequest( HttpMethodEnum $method, string $path, array $headers = [], $data = null ): Request {
 		$options = $this->getRequestOptions() ?? new RequestOptions();
 
+		$endpoint = OpenAiCompatibleSettings::get_endpoint_url();
+		$is_local = preg_match( '#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/|$)#i', $endpoint ) === 1;
+
 		// Set a default timeout if not already set, to prevent hanging indefinitely on unresponsive endpoints.
+		// Local models can be significantly slower to generate, so allow more time.
 		if ( $options->getTimeout() === null ) {
-			$options->setTimeout( 120.0 );
+			$options->setTimeout( $is_local ? 300.0 : 120.0 );
 		}
 
 		// Set a default connect timeout if not already set, to prevent hanging indefinitely on connection issues.
+		// Localhost should connect nearly instantly, so use a short connect timeout.
 		if ( $options->getConnectTimeout() === null ) {
-			$options->setConnectTimeout( 60.0 );
+			$options->setConnectTimeout( $is_local ? 5.0 : 60.0 );
 		}
 
 		return new Request(
