@@ -11,6 +11,7 @@ declare( strict_types=1 );
 namespace rtCamp\UniversalOpenAiConnector\Models;
 
 use WordPress\AiClient\Providers\Http\DTO\Request;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Http\Enums\HttpMethodEnum;
 use WordPress\AiClient\Providers\OpenAiCompatibleImplementation\AbstractOpenAiCompatibleTextGenerationModel;
 use rtCamp\UniversalOpenAiConnector\Provider\OpenAiCompatibleProvider;
@@ -41,13 +42,35 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 		// Only send them when talking to the real OpenAI API.
 		$endpoint = OpenAiCompatibleSettings::get_endpoint_url();
 		if ( strpos( $endpoint, 'api.openai.com' ) === false ) {
-			unset( $params['response_format'] );
 			unset( $params['n'] );
 		}
 
-		$params['reasoning_effort'] = 'none';
-
 		return apply_filters( 'openai_compatible_text_generation_params', $params );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Wraps the output schema in the name/schema/strict envelope required by
+	 * OpenAI-compatible structured-output APIs (which OpenRouter mirrors).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed>|null $output_schema The output schema.
+	 * @return array<string, mixed>
+	 */
+	protected function prepareResponseFormatParam( ?array $output_schema ): array {
+		if ( is_array( $output_schema ) ) {
+			return [
+				'type'        => 'json_schema',
+				'json_schema' => [
+					'name'   => 'result',
+					'schema' => $output_schema,
+					'strict' => true,
+				],
+			];
+		}
+		return [ 'type' => 'json_object' ];
 	}
 
 	/**
@@ -111,12 +134,24 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 	 * @return \WordPress\AiClient\Providers\Http\DTO\Request The created request.
 	 */
 	protected function createRequest( HttpMethodEnum $method, string $path, array $headers = [], $data = null ): Request {
+		$options = $this->getRequestOptions() ?? new RequestOptions();
+
+		// Set a default timeout if not already set, to prevent hanging indefinitely on unresponsive endpoints.
+		if ( $options->getTimeout() === null ) {
+			$options->setTimeout( 120.0 );
+		}
+
+		// Set a default connect timeout if not already set, to prevent hanging indefinitely on connection issues.
+		if ( $options->getConnectTimeout() === null ) {
+			$options->setConnectTimeout( 60.0 );
+		}
+
 		return new Request(
 			$method,
 			OpenAiCompatibleProvider::url( '/' . ltrim( $path, '/' ) ),
 			$headers,
 			$data,
-			$this->getRequestOptions()
+			$options
 		);
 	}
 }
