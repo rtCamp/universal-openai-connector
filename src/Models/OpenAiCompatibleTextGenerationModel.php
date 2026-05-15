@@ -38,8 +38,8 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 			$params['model'] = $selected_model;
 		}
 
-		// Many strict OpenAI-compatible backends reject OpenAI-specific parameters.
-		// Only send them when talking to the real OpenAI API.
+		// The `n` parameter (number of completions) is OpenAI-specific and rejected
+		// by many strict OpenAI-compatible backends. Strip it unless targeting the real OpenAI API.
 		$endpoint = OpenAiCompatibleSettings::get_endpoint_url();
 		if ( strpos( $endpoint, 'api.openai.com' ) === false ) {
 			unset( $params['n'] );
@@ -134,19 +134,27 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 	 * @return \WordPress\AiClient\Providers\Http\DTO\Request The created request.
 	 */
 	protected function createRequest( HttpMethodEnum $method, string $path, array $headers = [], $data = null ): Request {
-		$options = $this->getRequestOptions() ?? new RequestOptions();
+		$existing = $this->getRequestOptions();
+		$options  = null !== $existing
+			? RequestOptions::fromArray( $existing->toArray() )
+			: new RequestOptions();
 
-		$endpoint = OpenAiCompatibleSettings::get_endpoint_url();
-		$is_local = preg_match( '#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/|$)#i', $endpoint ) === 1;
+		// Derive the effective base URL from the same source used to build the request,
+		// so that env-var overrides (OPENAI_COMPATIBLE_BASE_URL) are respected.
+		$effective_base_url = OpenAiCompatibleProvider::url( '/' );
+		$is_local           = preg_match( '#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/|$)#i', $effective_base_url ) === 1;
 
-		// Set a default timeout if not already set, to prevent hanging indefinitely on unresponsive endpoints.
-		// Local models can be significantly slower to generate, so allow more time.
+		// Set a default overall request timeout to prevent hanging on unresponsive endpoints.
+		// Local models can be significantly slower to generate than remote APIs, so they get
+		// a longer overall timeout (300 s) rather than a shorter one.
 		if ( $options->getTimeout() === null ) {
 			$options->setTimeout( $is_local ? 300.0 : 120.0 );
 		}
 
-		// Set a default connect timeout if not already set, to prevent hanging indefinitely on connection issues.
-		// Localhost should connect nearly instantly, so use a short connect timeout.
+		// Set a default connect timeout to fail fast if the endpoint is unreachable.
+		// A local server should accept connections almost instantly; use a short connect
+		// timeout so a mis-configured local endpoint is detected quickly. Remote endpoints
+		// may be slower to establish a connection, so allow more time.
 		if ( $options->getConnectTimeout() === null ) {
 			$options->setConnectTimeout( $is_local ? 5.0 : 60.0 );
 		}
