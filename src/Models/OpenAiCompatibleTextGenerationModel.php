@@ -144,18 +144,13 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 		$effective_base_url = OpenAiCompatibleProvider::url( '/' );
 		$is_local           = preg_match( '#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/|$)#i', $effective_base_url ) === 1;
 
-		// Set a default overall request timeout to prevent hanging on unresponsive endpoints.
-		// Local models can be significantly slower to generate than remote APIs, so they get
-		// a longer overall timeout (300 s) rather than a shorter one.
-		if ( $options->getTimeout() === null ) {
-			$options->setTimeout( $is_local ? 300.0 : 120.0 );
+		// Local inference is slow; force a generous timeout. Remote: only set if absent.
+		if ( $is_local || $options->getTimeout() === null ) {
+			$options->setTimeout( $is_local ? 120.0 : 60.0 );
 		}
 
-		// Set a default connect timeout to fail fast if the endpoint is unreachable.
-		// A local server should accept connections almost instantly; use a short connect
-		// timeout so a mis-configured local endpoint is detected quickly. Remote endpoints
-		// may be slower to establish a connection, so allow more time.
-		if ( $options->getConnectTimeout() === null ) {
+		// Local servers connect instantly; force a short connect timeout to detect misconfig fast.
+		if ( $is_local || $options->getConnectTimeout() === null ) {
 			$options->setConnectTimeout( $is_local ? 5.0 : 60.0 );
 		}
 
