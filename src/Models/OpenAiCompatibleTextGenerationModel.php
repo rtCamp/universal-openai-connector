@@ -11,6 +11,7 @@ declare( strict_types=1 );
 namespace rtCamp\UniversalOpenAiConnector\Models;
 
 use WordPress\AiClient\Providers\Http\DTO\Request;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Http\Enums\HttpMethodEnum;
 use WordPress\AiClient\Providers\OpenAiCompatibleImplementation\AbstractOpenAiCompatibleTextGenerationModel;
 use rtCamp\UniversalOpenAiConnector\Provider\OpenAiCompatibleProvider;
@@ -37,17 +38,39 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 			$params['model'] = $selected_model;
 		}
 
-		// Many strict OpenAI-compatible backends reject OpenAI-specific parameters.
-		// Only send them when talking to the real OpenAI API.
+		// The `n` parameter (number of completions) is OpenAI-specific and rejected
+		// by many strict OpenAI-compatible backends. Strip it unless targeting the real OpenAI API.
 		$endpoint = OpenAiCompatibleSettings::get_endpoint_url();
 		if ( strpos( $endpoint, 'api.openai.com' ) === false ) {
-			unset( $params['response_format'] );
 			unset( $params['n'] );
 		}
 
-		$params['reasoning_effort'] = 'none';
-
 		return apply_filters( 'openai_compatible_text_generation_params', $params );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Wraps the output schema in the name/schema/strict envelope required by
+	 * OpenAI-compatible structured-output APIs (which OpenRouter mirrors).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed>|null $output_schema The output schema.
+	 * @return array<string, mixed>
+	 */
+	protected function prepareResponseFormatParam( ?array $output_schema ): array {
+		if ( is_array( $output_schema ) ) {
+			return [
+				'type'        => 'json_schema',
+				'json_schema' => [
+					'name'   => 'result',
+					'schema' => $output_schema,
+					'strict' => true,
+				],
+			];
+		}
+		return [ 'type' => 'json_object' ];
 	}
 
 	/**
@@ -111,12 +134,32 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 	 * @return \WordPress\AiClient\Providers\Http\DTO\Request The created request.
 	 */
 	protected function createRequest( HttpMethodEnum $method, string $path, array $headers = [], $data = null ): Request {
+		$existing = $this->getRequestOptions();
+		$options  = null !== $existing
+			? RequestOptions::fromArray( $existing->toArray() )
+			: new RequestOptions();
+
+		// Derive the effective base URL from the same source used to build the request,
+		// so that env-var overrides (OPENAI_COMPATIBLE_BASE_URL) are respected.
+		$effective_base_url = OpenAiCompatibleProvider::url( '/' );
+		$is_local           = preg_match( '#^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(/|$)#i', $effective_base_url ) === 1;
+
+		// Local inference is slow; force a generous timeout. Remote: only set if absent.
+		if ( $is_local || $options->getTimeout() === null ) {
+			$options->setTimeout( $is_local ? 120.0 : 60.0 );
+		}
+
+		// Local servers connect instantly; force a short connect timeout to detect misconfig fast.
+		if ( $is_local || $options->getConnectTimeout() === null ) {
+			$options->setConnectTimeout( $is_local ? 5.0 : 60.0 );
+		}
+
 		return new Request(
 			$method,
 			OpenAiCompatibleProvider::url( '/' . ltrim( $path, '/' ) ),
 			$headers,
 			$data,
-			$this->getRequestOptions()
+			$options
 		);
 	}
 }
