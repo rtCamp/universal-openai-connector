@@ -37,6 +37,8 @@
 		"typescript": "^5.9.3"
 	},
 	"scripts": {
+		"lint:css": "wp-scripts lint-style",
+		"lint:css:fix": "wp-scripts lint-style --fix",
 		"lint:js:fix": "npm run lint:js -- --fix",
 		"lint:js": "wp-scripts lint-js",
 		"lint:js:types": "tsc --noEmit",
