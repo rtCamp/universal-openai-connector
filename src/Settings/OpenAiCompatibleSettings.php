@@ -199,7 +199,7 @@ class OpenAiCompatibleSettings {
 			return;
 		}
 		?>
-		<div class="wrap" style="max-width: 56rem;">
+		<div class="wrap universal-openai-connector-settings-wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			<p><?php esc_html_e( 'Configure an OpenAI-compatible endpoint and choose default models used for text and image generation.', 'universal-openai-connector' ); ?></p>
 			<p>
@@ -224,6 +224,33 @@ class OpenAiCompatibleSettings {
 	}
 
 	/**
+	 * Returns a list of well-known OpenAI-compatible provider endpoints.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array<string, string> Label => URL pairs.
+	 */
+	private static function get_preset_endpoints(): array {
+		return apply_filters(
+			'universal_openai_connector_endpoints',
+			[
+				'OpenAI'       => 'https://api.openai.com/v1',
+				'Mistral AI'   => 'https://api.mistral.ai/v1',
+				'Together AI'  => 'https://api.together.xyz/v1',
+				'Groq'         => 'https://api.groq.com/openai/v1',
+				'Fireworks AI' => 'https://api.fireworks.ai/inference/v1',
+				'Xiaomi AI'    => 'https://api.ai.xiaomi.com/v1',
+				'NVIDIA NIM'   => 'https://integrate.api.nvidia.com/v1',
+				'OpenRouter'   => 'https://openrouter.ai/api/v1',
+				'Google'       => 'https://generativelanguage.googleapis.com/v1beta/openai',
+				'Anthropic'    => 'https://api.anthropic.com/v1',
+				'DeepSeek'     => 'https://api.deepseek.com/v1',
+				'Perplexity'   => 'https://api.perplexity.ai',
+			]
+		);
+	}
+
+	/**
 	 * Renders endpoint URL field.
 	 *
 	 * @since 1.0.0
@@ -233,17 +260,59 @@ class OpenAiCompatibleSettings {
 		$value    = (string) $settings[ self::KEY_ENDPOINT_URL ];
 		$id       = self::OPTION_NAME . '-endpoint-url';
 		$name     = self::OPTION_NAME . '[' . self::KEY_ENDPOINT_URL . ']';
+		$presets  = self::get_preset_endpoints();
+
+		$presets_data = [];
+		foreach ( $presets as $label => $url ) {
+			$presets_data[] = [
+				'label' => $label,
+				'url'   => $url,
+			];
+		}
 		?>
+		<div
+			id="openai-compatible-endpoint-combobox"
+			data-presets="<?php echo esc_attr( (string) wp_json_encode( $presets_data ) ); ?>"
+		>
+			<div class="openai-compatible-endpoint-search-container">
+				<span class="openai-compatible-endpoint-search-icon" aria-hidden="true">
+					<svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="8.5" cy="8.5" r="5.75" stroke="currentColor" stroke-width="1.75"/>
+						<path d="M13 13L17 17" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+					</svg>
+				</span>
+				<input
+					type="text"
+					id="<?php echo esc_attr( $id ); ?>-search"
+					autocomplete="off"
+					spellcheck="false"
+					value="<?php echo esc_attr( $value ); ?>"
+					placeholder="<?php esc_attr_e( 'Search or enter custom URL', 'universal-openai-connector' ); ?>"
+					class="openai-compatible-endpoint-search-input"
+				/>
+				<button
+					type="button"
+					id="openai-compatible-endpoint-toggle"
+					aria-label="<?php esc_attr_e( 'Toggle provider list', 'universal-openai-connector' ); ?>"
+				>
+					<svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+			</div>
+			<ul
+				role="listbox"
+				class="openai-compatible-endpoint-presets-list"
+			></ul>
+		</div>
 		<input
-			type="url"
+			type="hidden"
 			id="<?php echo esc_attr( $id ); ?>"
 			name="<?php echo esc_attr( $name ); ?>"
-			class="regular-text"
-			placeholder="https://api.openai.com/v1"
 			value="<?php echo esc_attr( $value ); ?>"
 		/>
-		<p class="description">
-			<?php esc_html_e( 'Base URL for your OpenAI-compatible API (for example, https://api.openai.com/v1).', 'universal-openai-connector' ); ?>
+		<p class="description openai-compatible-endpoint-description">
+			<?php esc_html_e( 'Search a preset provider or type a custom base URL for your OpenAI-compatible API.', 'universal-openai-connector' ); ?>
 		</p>
 		<?php
 	}
@@ -262,7 +331,7 @@ class OpenAiCompatibleSettings {
 		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
 			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
 		</select>
-		<span id="openai-compatible-text-model-status" style="margin-left:8px; font-size:12px; color:#50575e;"></span>
+		<span id="openai-compatible-text-model-status" class="openai-compatible-model-status"></span>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>
@@ -283,7 +352,7 @@ class OpenAiCompatibleSettings {
 		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
 			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
 		</select>
-		<span id="openai-compatible-image-model-status" style="margin-left:8px; font-size:12px; color:#50575e;"></span>
+		<span id="openai-compatible-image-model-status" class="openai-compatible-model-status"></span>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>
@@ -302,9 +371,16 @@ class OpenAiCompatibleSettings {
 			return;
 		}
 
+		wp_enqueue_style(
+			'universal-openai-connector-settings',
+			plugins_url( 'assets/admin/css/settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			[],
+			'1.0.0'
+		);
+
 		wp_enqueue_script(
 			'universal-openai-connector-settings',
-			plugins_url( 'assets/settings-models.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			plugins_url( 'assets/admin/js/settings-models.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
 			[],
 			'1.0.0',
 			true
