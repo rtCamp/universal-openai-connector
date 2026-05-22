@@ -84,7 +84,7 @@
 			return;
 		}
 		statusEl.textContent = message || '';
-		statusEl.style.color = isError ? '#d63638' : '#50575e';
+		statusEl.classList.toggle( 'openai-compatible-model-status--error', isError );
 	}
 
 	/**
@@ -103,8 +103,9 @@
 
 	/**
 	 * Initializes the endpoint preset combobox component.
+	 * @param {Function} onEndpointCommit Callback function when an endpoint is committed.
 	 */
-	function initEndpointPreset() {
+	function initEndpointPreset( onEndpointCommit ) {
 		const wrapper = document.getElementById( 'openai-compatible-endpoint-combobox' );
 		const hiddenInput = document.getElementById( 'universal_openai_connector_settings-endpoint-url' );
 
@@ -122,6 +123,24 @@
 
 		// Retrieve toggle button after checking wrapper and search elements.
 		const toggleBtn = document.getElementById( 'openai-compatible-endpoint-toggle' );
+
+		// Set the inline style explicitly so list.style.display is always authoritative
+		// (CSS-only display:none leaves list.style.display as '', breaking the toggle check).
+		list.style.display = 'none';
+
+		// Track the last committed URL to avoid redundant re-fetches (e.g. blur after selectUrl).
+		let committedUrl = searchInput.value;
+
+		// Calls onEndpointCommit only when the URL has actually changed.
+		function commitUrl( url ) {
+			if ( url === committedUrl ) {
+				return;
+			}
+			committedUrl = url;
+			if ( typeof onEndpointCommit === 'function' ) {
+				onEndpointCommit( url );
+			}
+		}
 
 		// Parse the presets data attribute passed from PHP.
 		let presets = [];
@@ -146,7 +165,7 @@
 				return escHtml( text );
 			}
 			return escHtml( text.slice( 0, idx ) ) +
-				'<mark style="background:#fff3cd; padding:0;">' + escHtml( text.slice( idx, idx + query.length ) ) + '</mark>' +
+				'<mark class="openai-compatible-endpoint-highlight">' + escHtml( text.slice( idx, idx + query.length ) ) + '</mark>' +
 				escHtml( text.slice( idx + query.length ) );
 		}
 
@@ -175,8 +194,8 @@
 				li.setAttribute( 'aria-selected', 'false' );
 				li.id = list.id + '-opt-' + optIndex++;
 				li.dataset.url = query;
-				li.style.cssText = 'padding:8px 12px; cursor:pointer; border-bottom:1px solid #f0f0f1;';
-				li.innerHTML = '<em style="color:#2271b1;">Add &ldquo;' + escHtml( query ) + '&rdquo;</em>';
+				li.className = 'openai-compatible-endpoint-option openai-compatible-endpoint-option--custom';
+				li.innerHTML = '<em class="openai-compatible-endpoint-option-custom-label">Add &ldquo;' + escHtml( query ) + '&rdquo;</em>';
 				list.appendChild( li );
 			}
 
@@ -187,10 +206,10 @@
 				li.setAttribute( 'aria-selected', 'false' );
 				li.id = list.id + '-opt-' + optIndex++;
 				li.dataset.url = p.url;
-				li.style.cssText = 'padding:8px 12px; cursor:pointer;';
+				li.className = 'openai-compatible-endpoint-option';
 				li.innerHTML =
-					'<strong style="display:block; font-size:13px;">' + highlight( p.label, query ) + '</strong>' +
-					'<span style="font-size:12px; color:#646970;">' + highlight( p.url, query ) + '</span>';
+					'<strong class="openai-compatible-endpoint-option-label">' + highlight( p.label, query ) + '</strong>' +
+					'<span class="openai-compatible-endpoint-option-url">' + highlight( p.url, query ) + '</span>';
 				list.appendChild( li );
 			} );
 		}
@@ -202,7 +221,6 @@
 			searchInput.setAttribute( 'aria-expanded', 'true' );
 			if ( toggleBtn ) {
 				toggleBtn.setAttribute( 'aria-expanded', 'true' );
-				toggleBtn.style.transform = 'rotate(180deg)';
 			}
 		}
 
@@ -213,7 +231,6 @@
 			searchInput.removeAttribute( 'aria-activedescendant' );
 			if ( toggleBtn ) {
 				toggleBtn.setAttribute( 'aria-expanded', 'false' );
-				toggleBtn.style.transform = '';
 			}
 		}
 
@@ -222,16 +239,17 @@
 			hiddenInput.value = url;
 			searchInput.value = url;
 			closeList();
+			commitUrl( url );
 		}
 
 		// Highlights the hovered or navigated dropdown item.
 		function highlightItem( li ) {
 			list.querySelectorAll( 'li' ).forEach( function( el ) {
-				el.style.background = '';
+				el.classList.remove( 'openai-compatible-endpoint-option--active' );
 				el.setAttribute( 'aria-selected', 'false' );
 			} );
 			if ( li ) {
-				li.style.background = '#f0f6fc';
+				li.classList.add( 'openai-compatible-endpoint-option--active' );
 				li.setAttribute( 'aria-selected', 'true' );
 				searchInput.setAttribute( 'aria-activedescendant', li.id );
 			} else {
@@ -295,7 +313,7 @@
 
 			const items = Array.from( list.querySelectorAll( 'li[data-url]' ) );
 			const activeIndex = items.findIndex( function( el ) {
-				return el.style.background !== '';
+				return el.classList.contains( 'openai-compatible-endpoint-option--active' );
 			} );
 
 			if ( e.key === 'ArrowDown' ) {
@@ -314,6 +332,7 @@
 				} else {
 					hiddenInput.value = searchInput.value;
 					closeList();
+					commitUrl( searchInput.value );
 				}
 			} else if ( e.key === 'Escape' ) {
 				closeList();
@@ -328,6 +347,7 @@
 				if ( ! wrapper.contains( searchInput.ownerDocument.activeElement ) ) {
 					hiddenInput.value = searchInput.value;
 					closeList();
+					commitUrl( searchInput.value );
 				}
 			}, 150 );
 		} );
@@ -337,51 +357,79 @@
 	 * Main initialization function to fetch and populate model lists on page load.
 	 */
 	function init() {
-		// Initialize the endpoint combobox.
-		initEndpointPreset();
-
 		const textModelSelect = document.getElementById( 'universal_openai_connector_settings-text-model' );
 		const imageModelSelect = document.getElementById( 'universal_openai_connector_settings-image-model' );
 
 		if ( ! textModelSelect || ! imageModelSelect ) {
+			initEndpointPreset();
 			return;
 		}
 
 		const textStatus = document.getElementById( 'openai-compatible-text-model-status' );
 		const imageStatus = document.getElementById( 'openai-compatible-image-model-status' );
 		const ajaxUrl = settings.ajaxUrl || '';
-		const selectedTextModel = settings.selectedTextModel || '';
-		const selectedImageModel = settings.selectedImageModel || '';
 
-		// Set initial loading status messages.
-		setStatus( textStatus, i18n.loading || 'Loading models...', false );
-		setStatus( imageStatus, i18n.loading || 'Loading models...', false );
+		// Generation counter: each new fetch increments it so stale responses are discarded.
+		let fetchGeneration = 0;
 
-		// Fetch models list from WordPress admin-ajax endpoint.
-		window.fetch( ajaxUrl, { credentials: 'same-origin' } )
-			.then( function( response ) {
-				return response.json();
-			} )
-			.then( function( payload ) {
-				if ( ! payload || ! payload.success || ! Array.isArray( payload.data ) ) {
-					throw new Error( i18n.errorLoad || 'Could not load models from endpoint.' );
-				}
+		/**
+		 * Fetches the model list and refreshes both SELECT elements.
+		 *
+		 * @param {string} overrideUrl Optional endpoint URL to query instead of the saved setting.
+		 */
+		function fetchModels( overrideUrl ) {
+			const gen = ++fetchGeneration;
 
-				// Populate SELECT elements with retrieved models.
-				clearAndFillSelect( textModelSelect, payload.data, selectedTextModel );
-				clearAndFillSelect( imageModelSelect, payload.data, selectedImageModel );
+			setStatus( textStatus, i18n.loading || 'Loading models...', false );
+			setStatus( imageStatus, i18n.loading || 'Loading models...', false );
 
-				// Display the loaded count status.
-				const countText = String( payload.data.length ) + ' ' + ( i18n.loaded || 'models loaded.' );
-				setStatus( textStatus, countText, false );
-				setStatus( imageStatus, countText, false );
-			} )
-			.catch( function( error ) {
-				// Handle and display model fetching errors.
-				const message = ( error && error.message ) ? error.message : ( i18n.errorLoad || 'Could not load models from endpoint.' );
-				setStatus( textStatus, message, true );
-				setStatus( imageStatus, message, true );
-			} );
+			// Capture current select values before the async response arrives.
+			const currentTextModel = textModelSelect.value;
+			const currentImageModel = imageModelSelect.value;
+
+			// POST so the optional endpoint_url body parameter reaches the AJAX handler.
+			const body = new window.URLSearchParams();
+			if ( overrideUrl ) {
+				body.set( 'endpoint_url', overrideUrl );
+			}
+
+			window.fetch( ajaxUrl, { method: 'POST', credentials: 'same-origin', body } )
+				.then( function( response ) {
+					return response.json();
+				} )
+				.then( function( payload ) {
+					// Discard response if a newer fetch has already been dispatched.
+					if ( gen !== fetchGeneration ) {
+						return;
+					}
+
+					if ( ! payload || ! payload.success || ! Array.isArray( payload.data ) ) {
+						throw new Error( i18n.errorLoad || 'Could not load models from endpoint.' );
+					}
+
+					// Populate SELECT elements, preserving the user's current selection.
+					clearAndFillSelect( textModelSelect, payload.data, currentTextModel );
+					clearAndFillSelect( imageModelSelect, payload.data, currentImageModel );
+
+					const countText = String( payload.data.length ) + ' ' + ( i18n.loaded || 'models loaded.' );
+					setStatus( textStatus, countText, false );
+					setStatus( imageStatus, countText, false );
+				} )
+				.catch( function( error ) {
+					if ( gen !== fetchGeneration ) {
+						return;
+					}
+					const message = ( error && error.message ) ? error.message : ( i18n.errorLoad || 'Could not load models from endpoint.' );
+					setStatus( textStatus, message, true );
+					setStatus( imageStatus, message, true );
+				} );
+		}
+
+		// Initialize the endpoint combobox; re-fetch models whenever the endpoint changes.
+		initEndpointPreset( fetchModels );
+
+		// Initial fetch using the saved endpoint (no override).
+		fetchModels( '' );
 	}
 
 	// Trigger initialization when DOM is ready.

@@ -75,8 +75,51 @@
 	max-width: 25em;
 }
 
+/* Chevron rotation driven by the button's own aria-expanded attribute */
+#openai-compatible-endpoint-toggle[aria-expanded="true"] {
+	transform: rotate(180deg);
+}
+
+/* Preset list options */
+.openai-compatible-endpoint-option {
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+.openai-compatible-endpoint-option--custom {
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.openai-compatible-endpoint-option--active {
+	background: #f0f6fc;
+}
+
+.openai-compatible-endpoint-option-label {
+	display: block;
+	font-size: 13px;
+}
+
+.openai-compatible-endpoint-option-url {
+	font-size: 12px;
+	color: #646970;
+}
+
+.openai-compatible-endpoint-option-custom-label {
+	color: #2271b1;
+}
+
+/* Search-match highlight inside option text */
+.openai-compatible-endpoint-highlight {
+	background: #fff3cd;
+	padding: 0;
+}
+
 .openai-compatible-model-status {
 	margin-left: 8px;
 	font-size: 12px;
 	color: #50575e;
+}
+
+.openai-compatible-model-status--error {
+	color: #d63638;
 }
