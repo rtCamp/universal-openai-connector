@@ -231,7 +231,7 @@ class OpenAiCompatibleSettings {
 	 * @return array<string, string> Label => URL pairs.
 	 */
 	private static function get_preset_endpoints(): array {
-		return apply_filters(
+		$raw = apply_filters(
 			'universal_openai_connector_endpoints',
 			[
 				'OpenAI'       => 'https://api.openai.com/v1',
@@ -248,6 +248,25 @@ class OpenAiCompatibleSettings {
 				'Perplexity'   => 'https://api.perplexity.ai',
 			]
 		);
+
+		// Guard against a filter returning a non-array.
+		if ( ! is_array( $raw ) ) {
+			return [];
+		}
+
+		// Keep only entries where both the label (key) and URL (value) are non-empty strings.
+		$normalized = [];
+		foreach ( $raw as $label => $url ) {
+			if ( ! is_string( $label ) || '' === trim( $label ) ) {
+				continue;
+			}
+			if ( ! is_string( $url ) || '' === trim( $url ) ) {
+				continue;
+			}
+			$normalized[ $label ] = $url;
+		}
+
+		return $normalized;
 	}
 
 	/**
