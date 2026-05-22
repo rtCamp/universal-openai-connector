@@ -375,7 +375,7 @@
 		/**
 		 * Fetches the model list and refreshes both SELECT elements.
 		 *
-		 * @param {string} overrideUrl Optional endpoint URL to query instead of the saved setting.
+		 * @param {string|null} overrideUrl Endpoint URL override, or null to use the saved setting. Pass '' to preview the default endpoint.
 		 */
 		function fetchModels( overrideUrl ) {
 			const gen = ++fetchGeneration;
@@ -388,8 +388,10 @@
 			const currentImageModel = imageModelSelect.value;
 
 			// POST so the optional endpoint_url body parameter reaches the AJAX handler.
+			// null means "no override"; any string (including '') is sent explicitly so PHP can
+			// distinguish a user-cleared field from an absent parameter.
 			const body = new window.URLSearchParams();
-			if ( overrideUrl ) {
+			if ( null !== overrideUrl ) {
 				body.set( 'endpoint_url', overrideUrl );
 			}
 
@@ -428,8 +430,8 @@
 		// Initialize the endpoint combobox; re-fetch models whenever the endpoint changes.
 		initEndpointPreset( fetchModels );
 
-		// Initial fetch using the saved endpoint (no override).
-		fetchModels( '' );
+		// Initial fetch using the saved endpoint (null = no override).
+		fetchModels( null );
 	}
 
 	// Trigger initialization when DOM is ready.

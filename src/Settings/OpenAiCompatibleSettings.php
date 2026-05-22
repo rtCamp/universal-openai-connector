@@ -435,12 +435,11 @@ class OpenAiCompatibleSettings {
 		// Accept an optional endpoint URL POSTed by the settings page so models can be
 		// previewed for an unsaved endpoint before the form is submitted.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce already verified above via check_ajax_referer.
-		$endpoint_override = isset( $_POST['endpoint_url'] )
-			? self::sanitize_endpoint_url( sanitize_text_field( wp_unslash( (string) $_POST['endpoint_url'] ) ) )
-			: '';
-
-		if ( '' !== $endpoint_override ) {
-			$endpoint = rtrim( $endpoint_override, '/' );
+		if ( isset( $_POST['endpoint_url'] ) ) {
+			// Key present: apply the same empty→default substitution that sanitize_settings uses,
+			// so a cleared field previews models from DEFAULT_ENDPOINT rather than the saved one.
+			$sanitized = self::sanitize_endpoint_url( sanitize_text_field( wp_unslash( (string) $_POST['endpoint_url'] ) ) );
+			$endpoint  = rtrim( '' !== $sanitized ? $sanitized : self::DEFAULT_ENDPOINT, '/' );
 		} else {
 			$settings = self::get_settings();
 			$endpoint = rtrim( (string) $settings[ self::KEY_ENDPOINT_URL ], '/' );
