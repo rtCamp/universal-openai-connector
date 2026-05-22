@@ -166,10 +166,14 @@
 				return normalise( p.url ) === q;
 			} );
 
+			let optIndex = 0;
+
 			// If the user typed a custom URL not in the presets, show an option to use it.
 			if ( q && ! exactMatch ) {
 				const li = document.createElement( 'li' );
 				li.setAttribute( 'role', 'option' );
+				li.setAttribute( 'aria-selected', 'false' );
+				li.id = list.id + '-opt-' + optIndex++;
 				li.dataset.url = query;
 				li.style.cssText = 'padding:8px 12px; cursor:pointer; border-bottom:1px solid #f0f0f1;';
 				li.innerHTML = '<em style="color:#2271b1;">Add &ldquo;' + escHtml( query ) + '&rdquo;</em>';
@@ -180,6 +184,8 @@
 			filtered.forEach( function( p ) {
 				const li = document.createElement( 'li' );
 				li.setAttribute( 'role', 'option' );
+				li.setAttribute( 'aria-selected', 'false' );
+				li.id = list.id + '-opt-' + optIndex++;
 				li.dataset.url = p.url;
 				li.style.cssText = 'padding:8px 12px; cursor:pointer;';
 				li.innerHTML =
@@ -193,7 +199,9 @@
 		function openList( query ) {
 			buildList( query );
 			list.style.display = 'block';
+			searchInput.setAttribute( 'aria-expanded', 'true' );
 			if ( toggleBtn ) {
+				toggleBtn.setAttribute( 'aria-expanded', 'true' );
 				toggleBtn.style.transform = 'rotate(180deg)';
 			}
 		}
@@ -201,7 +209,10 @@
 		// Closes the presets dropdown list.
 		function closeList() {
 			list.style.display = 'none';
+			searchInput.setAttribute( 'aria-expanded', 'false' );
+			searchInput.removeAttribute( 'aria-activedescendant' );
 			if ( toggleBtn ) {
+				toggleBtn.setAttribute( 'aria-expanded', 'false' );
 				toggleBtn.style.transform = '';
 			}
 		}
@@ -217,9 +228,14 @@
 		function highlightItem( li ) {
 			list.querySelectorAll( 'li' ).forEach( function( el ) {
 				el.style.background = '';
+				el.setAttribute( 'aria-selected', 'false' );
 			} );
 			if ( li ) {
 				li.style.background = '#f0f6fc';
+				li.setAttribute( 'aria-selected', 'true' );
+				searchInput.setAttribute( 'aria-activedescendant', li.id );
+			} else {
+				searchInput.removeAttribute( 'aria-activedescendant' );
 			}
 		}
 

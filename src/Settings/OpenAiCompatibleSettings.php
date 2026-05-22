@@ -283,10 +283,15 @@ class OpenAiCompatibleSettings {
 				</span>
 				<input
 					type="text"
+					role="combobox"
 					id="<?php echo esc_attr( $id ); ?>-search"
 					name="<?php echo esc_attr( $name ); ?>"
 					autocomplete="off"
 					spellcheck="false"
+					aria-expanded="false"
+					aria-haspopup="listbox"
+					aria-autocomplete="list"
+					aria-controls="<?php echo esc_attr( $id ); ?>-listbox"
 					value="<?php echo esc_attr( $value ); ?>"
 					placeholder="<?php esc_attr_e( 'Search or enter custom URL', 'universal-openai-connector' ); ?>"
 					class="openai-compatible-endpoint-search-input"
@@ -295,6 +300,8 @@ class OpenAiCompatibleSettings {
 					type="button"
 					id="openai-compatible-endpoint-toggle"
 					aria-label="<?php esc_attr_e( 'Toggle provider list', 'universal-openai-connector' ); ?>"
+					aria-expanded="false"
+					aria-controls="<?php echo esc_attr( $id ); ?>-listbox"
 				>
 					<svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 						<path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
@@ -303,6 +310,8 @@ class OpenAiCompatibleSettings {
 			</div>
 			<ul
 				role="listbox"
+				id="<?php echo esc_attr( $id ); ?>-listbox"
+				aria-label="<?php esc_attr_e( 'Provider suggestions', 'universal-openai-connector' ); ?>"
 				class="openai-compatible-endpoint-presets-list"
 			></ul>
 		</div>
