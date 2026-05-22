@@ -77,7 +77,7 @@ class OpenAiCompatibleSettings {
 			[ $this, 'render_endpoint_field' ],
 			self::PAGE_SLUG,
 			self::SECTION_ID,
-			[ 'label_for' => self::OPTION_NAME . '-endpoint-url' ]
+			[ 'label_for' => self::OPTION_NAME . '-endpoint-url-search' ]
 		);
 
 		add_settings_field(
@@ -284,6 +284,7 @@ class OpenAiCompatibleSettings {
 				<input
 					type="text"
 					id="<?php echo esc_attr( $id ); ?>-search"
+					name="<?php echo esc_attr( $name ); ?>"
 					autocomplete="off"
 					spellcheck="false"
 					value="<?php echo esc_attr( $value ); ?>"
@@ -308,7 +309,6 @@ class OpenAiCompatibleSettings {
 		<input
 			type="hidden"
 			id="<?php echo esc_attr( $id ); ?>"
-			name="<?php echo esc_attr( $name ); ?>"
 			value="<?php echo esc_attr( $value ); ?>"
 		/>
 		<p class="description openai-compatible-endpoint-description">
