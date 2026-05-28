@@ -226,7 +226,7 @@ class OpenAiCompatibleSettings {
 	/**
 	 * Returns a list of well-known OpenAI-compatible provider endpoints.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 *
 	 * @return array<string, string> Label => URL pairs.
 	 */
@@ -403,14 +403,14 @@ class OpenAiCompatibleSettings {
 			'universal-openai-connector-settings',
 			plugins_url( 'assets/admin/css/settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
 			[],
-			'1.0.0'
+			UNIVERSAL_OPENAI_CONNECTOR_VERSION
 		);
 
 		wp_enqueue_script(
 			'universal-openai-connector-settings',
 			plugins_url( 'assets/admin/js/settings-models.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
 			[],
-			'1.0.0',
+			UNIVERSAL_OPENAI_CONNECTOR_VERSION,
 			true
 		);
 

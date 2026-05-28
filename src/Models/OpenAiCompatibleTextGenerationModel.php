@@ -54,7 +54,7 @@ class OpenAiCompatibleTextGenerationModel extends AbstractOpenAiCompatibleTextGe
 	 * Wraps the output schema in the name/schema/strict envelope required by
 	 * OpenAI-compatible structured-output APIs (which OpenRouter mirrors).
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.1
 	 *
 	 * @param array<string, mixed>|null $output_schema The output schema.
 	 * @return array<string, mixed>

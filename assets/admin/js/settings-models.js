@@ -92,6 +92,8 @@
 	 *
 	 * @param {string} str Unescaped HTML string.
 	 * @return {string} Escaped HTML string.
+	 *
+	 * @since 1.0.1
 	 */
 	function escHtml( str ) {
 		return String( str )
@@ -104,6 +106,7 @@
 	/**
 	 * Initializes the endpoint preset combobox component.
 	 * @param {Function} onEndpointCommit Callback function when an endpoint is committed.
+	 * @since 1.0.1
 	 */
 	function initEndpointPreset( onEndpointCommit ) {
 		const wrapper = document.getElementById( 'openai-compatible-endpoint-combobox' );
