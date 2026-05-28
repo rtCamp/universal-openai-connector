@@ -44,9 +44,7 @@ class OpenAiCompatibleImageGenerationModel extends AbstractOpenAiCompatibleImage
 		if ( strpos( $endpoint, 'api.openai.com' ) === false ) {
 			unset( $params['response_format'] );
 			unset( $params['n'] );
-			// @phpstan-ignore-next-line unset.offset
 			unset( $params['quality'] );
-			// @phpstan-ignore-next-line unset.offset
 			unset( $params['style'] );
 		}
 
