@@ -17,12 +17,12 @@
 		"@wordpress/icons": "^11.7.0",
 		"dompurify": "^3.3.2",
 		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
+		"react-dom": "^19.2.5"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.29.0",
 		"@types/react": "^18.3.28",
-		"@types/react-dom": "^18.3.7",
+		"@types/react-dom": "^19.2.3",
 		"@wordpress/babel-preset-default": "^8.40.0",
 		"@wordpress/browserslist-config": "^6.40.0",
 		"@wordpress/eslint-plugin": "^24.2.0",
