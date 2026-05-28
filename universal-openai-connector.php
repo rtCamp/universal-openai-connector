@@ -6,7 +6,7 @@
  * Requires at least: 7.0
  * Requires PHP:      7.4
  * Requires Plugins:  ai
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later
@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define( 'UNIVERSAL_OPENAI_CONNECTOR_VERSION', '1.0.1' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_PHP_VERSION', '7.4' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION', '7.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
