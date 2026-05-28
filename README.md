@@ -78,7 +78,7 @@ Any service that implements the OpenAI REST API (`/v1/chat/completions`, `/v1/im
 - **WordPress:** 7.0 or higher
 - **Requires at least:** 7.0
 - **Tested up to:** 7.0
-- **Stable tag:** 1.0.0
+- **Stable tag:** 1.0.1
 - **PHP:** 7.4 or higher
 - **Requires PHP:** 7.4
 - **Required Plugin:** [WordPress AI Client](https://wordpress.org/plugins/ai/) (`ai`) must be active
