@@ -551,8 +551,9 @@ class OpenAiCompatibleSettings {
 						}
 
 						return [
-							'id'   => $id,
-							'name' => $name,
+							'id'       => $id,
+							'name'     => $name,
+							'is_image' => self::is_likely_image_model( $id ),
 						];
 					},
 					$raw_models
@@ -716,10 +717,10 @@ class OpenAiCompatibleSettings {
 		$api_key   = self::get_api_key();
 		$cache_key = 'ai_openai_compatible_models_' . md5( $endpoint . '|' . $api_key );
 
-		$cached = get_transient( $cache_key );
+		/*$cached = get_transient( $cache_key );
 		if ( false !== $cached && is_array( $cached ) ) {
 			return $cached;
-		}
+		}*/
 
 		$models_url = $endpoint . '/models';
 		$headers    = [
@@ -742,6 +743,8 @@ class OpenAiCompatibleSettings {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
+		error_log( \var_export( $body, true) );
+		error_log( '-----------------------------' );
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) ) {
@@ -789,8 +792,9 @@ class OpenAiCompatibleSettings {
 						}
 
 						return [
-							'id'   => $id,
-							'name' => $name,
+							'id'       => $id,
+							'name'     => $name,
+							'is_image' => self::is_likely_image_model( $id ),
 						];
 					},
 					$raw_models
@@ -799,7 +803,7 @@ class OpenAiCompatibleSettings {
 		);
 
 		if ( ! empty( $models ) ) {
-			set_transient( $cache_key, $models, self::MODELS_CACHE_TTL );
+			//set_transient( $cache_key, $models, self::MODELS_CACHE_TTL );
 		}
 
 		return $models;
@@ -832,6 +836,10 @@ class OpenAiCompatibleSettings {
 			'wuerstchen',
 			'stable-cascade',
 			'playground-v',
+			'riverflow',
+			'recraft',
+			'seedream',
+			'imagine',
 			// Segment-based patterns: hyphens and slashes act as word separators in model IDs.
 			'-image',
 			'/image',
