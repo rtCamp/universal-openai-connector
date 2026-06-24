@@ -50,6 +50,23 @@ class OpenAiCompatibleProvider extends AbstractApiProvider {
 	/**
 	 * {@inheritDoc}
 	 *
+	 * Overrides the base URL construction to support dynamic custom routing filters.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $path Optional path to append to the base URL. Default empty string.
+	 * @return string The complete URL.
+	 */
+	public static function url( string $path = '' ): string {
+		$base_url = static::baseUrl();
+		$url      = parent::url( $path );
+
+		return apply_filters( 'universal_openai_connector_url', $url, $path, $base_url );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @param \WordPress\AiClient\Providers\Models\DTO\ModelMetadata $model_metadata    The model metadata.
 	 * @param \WordPress\AiClient\Providers\DTO\ProviderMetadata     $provider_metadata The provider metadata.
 	 * @return \WordPress\AiClient\Providers\Models\Contracts\ModelInterface The created model.

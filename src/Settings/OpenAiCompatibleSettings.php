@@ -472,7 +472,7 @@ class OpenAiCompatibleSettings {
 			wp_send_json_success( $cached );
 		}
 
-		$models_url = $endpoint . '/models';
+		$models_url = self::get_models_url( $endpoint );
 		$headers    = [
 			'Accept' => 'application/json',
 		];
@@ -648,6 +648,19 @@ class OpenAiCompatibleSettings {
 	}
 
 	/**
+	 * Returns the correct endpoint URL for /models request, applying dynamic custom filters.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $endpoint The base endpoint URL.
+	 * @return string The resolved /models URL.
+	 */
+	private static function get_models_url( string $endpoint ): string {
+		$models_url = $endpoint . '/models';
+		return apply_filters( 'universal_openai_connector_models_url', $models_url, $endpoint );
+	}
+
+	/**
 	 * Returns current settings merged with defaults.
 	 *
 	 * @since 1.0.0
@@ -721,7 +734,7 @@ class OpenAiCompatibleSettings {
 			return $cached;
 		}
 
-		$models_url = $endpoint . '/models';
+		$models_url = self::get_models_url( $endpoint );
 		$headers    = [
 			'Accept' => 'application/json',
 		];
