@@ -717,10 +717,10 @@ class OpenAiCompatibleSettings {
 		$api_key   = self::get_api_key();
 		$cache_key = 'ai_openai_compatible_models_' . md5( $endpoint . '|' . $api_key );
 
-		/*$cached = get_transient( $cache_key );
+		$cached = get_transient( $cache_key );
 		if ( false !== $cached && is_array( $cached ) ) {
 			return $cached;
-		}*/
+		}
 
 		$models_url = $endpoint . '/models';
 		$headers    = [
@@ -743,8 +743,6 @@ class OpenAiCompatibleSettings {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-		error_log( \var_export( $body, true) );
-		error_log( '-----------------------------' );
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) ) {
@@ -803,7 +801,7 @@ class OpenAiCompatibleSettings {
 		);
 
 		if ( ! empty( $models ) ) {
-			//set_transient( $cache_key, $models, self::MODELS_CACHE_TTL );
+			set_transient( $cache_key, $models, self::MODELS_CACHE_TTL );
 		}
 
 		return $models;
