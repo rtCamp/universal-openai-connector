@@ -5,7 +5,6 @@
  * Description:       OpenAI-compatible provider for the WordPress AI Client with configurable endpoint and default text/image models.
  * Requires at least: 7.0
  * Requires PHP:      7.4
- * Requires Plugins:  ai
  * Version:           1.0.1
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
