@@ -239,7 +239,7 @@ class OpenAiCompatibleSettings {
 				'Together AI'  => 'https://api.together.xyz/v1',
 				'Groq'         => 'https://api.groq.com/openai/v1',
 				'Fireworks AI' => 'https://api.fireworks.ai/inference/v1',
-				'Xiaomi AI'    => 'https://api.ai.xiaomi.com/v1',
+				'Xiaomi AI'    => 'https://api.xiaomimimo.com/v1',
 				'NVIDIA NIM'   => 'https://integrate.api.nvidia.com/v1',
 				'OpenRouter'   => 'https://openrouter.ai/api/v1',
 				'Google'       => 'https://generativelanguage.googleapis.com/v1beta/openai',
