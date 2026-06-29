@@ -58,14 +58,16 @@ function clearAndFillSelect(
 	}
 
 	// Clear existing options.
-	selectEl.innerHTML = '';
+	selectEl.textContent = '';
+
+	const fragment = document.createDocumentFragment();
 
 	// Create and append the default "Use AI Client default" option.
 	const emptyOption = document.createElement( 'option' );
 	emptyOption.value = '';
 	emptyOption.textContent = i18n.aiClientDefault || 'Use AI Client default';
 	emptyOption.selected = ! selectedModel;
-	selectEl.appendChild( emptyOption );
+	fragment.appendChild( emptyOption );
 
 	// If no models were fetched, show the currently selected model as fallback.
 	if ( ! Array.isArray( models ) || models.length === 0 ) {
@@ -74,13 +76,24 @@ function clearAndFillSelect(
 			fallbackOption.value = selectedModel;
 			fallbackOption.textContent = selectedModel;
 			fallbackOption.selected = true;
-			selectEl.appendChild( fallbackOption );
+			fragment.appendChild( fallbackOption );
 		}
+		selectEl.appendChild( fragment );
 		return;
 	}
 
+	// If the saved model is not in the fetched models list, preserve it as a custom/saved option.
+	const hasSavedModel = models.some( ( model ) => model.id === selectedModel );
+	if ( selectedModel && ! hasSavedModel ) {
+		const customOption = document.createElement( 'option' );
+		customOption.value = selectedModel;
+		customOption.textContent = `${ selectedModel } (saved)`;
+		customOption.selected = true;
+		fragment.insertBefore( customOption, fragment.firstChild );
+	}
+
 	// Populate select options from the fetched models array.
-	models.forEach( function( model ) {
+	models.forEach( ( model ) => {
 		if ( ! model || typeof model.id !== 'string' || ! model.id.trim() ) {
 			return;
 		}
@@ -88,26 +101,17 @@ function clearAndFillSelect(
 		const option = document.createElement( 'option' );
 		option.value = model.id;
 		option.textContent = model.name && model.name !== model.id
-			? model.id + ' (' + model.name + ')'
+			? `${ model.id } (${ model.name })`
 			: model.id;
 
 		if ( model.id === selectedModel ) {
 			option.selected = true;
 		}
 
-		selectEl.appendChild( option );
+		fragment.appendChild( option );
 	} );
 
-	// If the saved model is not in the fetched models list, preserve it as a custom/saved option.
-	if ( selectedModel && ! models.some( function( model ) {
-		return model.id === selectedModel;
-	} ) ) {
-		const customOption = document.createElement( 'option' );
-		customOption.value = selectedModel;
-		customOption.textContent = selectedModel + ' (saved)';
-		customOption.selected = true;
-		selectEl.insertBefore( customOption, selectEl.firstChild );
-	}
+	selectEl.appendChild( fragment );
 }
 
 /**
@@ -157,7 +161,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	}
 
 	const searchInput = document.getElementById( 'universal_openai_connector_settings-endpoint-url-search' ) as HTMLInputElement | null;
-	const list = wrapper.querySelector( 'ul[role="listbox"]' );
+	const list = wrapper.querySelector( 'ul[role="listbox"]' ) as HTMLUListElement | null;
 
 	if ( ! searchInput || ! list ) {
 		return;
@@ -174,7 +178,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	let committedUrl = searchInput.value;
 
 	// Calls onEndpointCommit only when the URL has actually changed.
-	function commitUrl( url: string ): void {
+	const commitUrl = ( url: string ): void => {
 		if ( url === committedUrl ) {
 			return;
 		}
@@ -182,23 +186,21 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( typeof onEndpointCommit === 'function' ) {
 			onEndpointCommit( url );
 		}
-	}
+	};
 
 	// Parse the presets data attribute passed from PHP.
 	let presets: Preset[] = [];
 	try {
-		presets = JSON.parse( wrapper.dataset.presets || '[]' ) as Preset[];
+		presets = JSON.parse( wrapper.dataset[ 'presets' ] || '[]' ) as Preset[];
 	} catch ( e ) {
 		presets = [];
 	}
 
 	// Helper to normalize input for case-insensitive search.
-	function normalise( str: string ): string {
-		return String( str ).toLowerCase().trim();
-	}
+	const normalise = ( str: string ): string => String( str ).toLowerCase().trim();
 
 	// Helper to highlight matching query text in the preset items.
-	function highlight( text: string, query: string ): string {
+	const highlight = ( text: string, query: string ): string => {
 		if ( ! query ) {
 			return escHtml( text );
 		}
@@ -206,26 +208,22 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( idx === -1 ) {
 			return escHtml( text );
 		}
-		return escHtml( text.slice( 0, idx ) ) +
-			'<mark class="openai-compatible-endpoint-highlight">' + escHtml( text.slice( idx, idx + query.length ) ) + '</mark>' +
-			escHtml( text.slice( idx + query.length ) );
-	}
+		return `${ escHtml( text.slice( 0, idx ) ) }<mark class="openai-compatible-endpoint-highlight">${ escHtml( text.slice( idx, idx + query.length ) ) }</mark>${ escHtml( text.slice( idx + query.length ) ) }`;
+	};
 
 	// Constructs the dropdown list options based on user search query.
-	function buildList( query: string ): void {
-		list!.innerHTML = '';
+	const buildList = ( query: string ): void => {
+		list!.textContent = '';
 		const q = normalise( query );
+
+		const fragment = document.createDocumentFragment();
 
 		// Filter presets based on user query.
 		const filtered = q
-			? presets.filter( function( p ) {
-				return normalise( p.label ).includes( q ) || normalise( p.url ).includes( q );
-			} )
+			? presets.filter( ( p ) => normalise( p.label ).includes( q ) || normalise( p.url ).includes( q ) )
 			: presets;
 
-		const exactMatch = presets.some( function( p ) {
-			return normalise( p.url ) === q;
-		} );
+		const exactMatch = presets.some( ( p ) => normalise( p.url ) === q );
 
 		let optIndex = 0;
 
@@ -234,59 +232,61 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 			const li = document.createElement( 'li' );
 			li.setAttribute( 'role', 'option' );
 			li.setAttribute( 'aria-selected', 'false' );
-			li.id = list!.id + '-opt-' + optIndex++;
-			li.dataset.url = query;
+			li.id = `${ list!.id }-opt-${ optIndex++ }`;
+			li.dataset[ 'url' ] = query;
 			li.className = 'openai-compatible-endpoint-option openai-compatible-endpoint-option--custom';
-			li.innerHTML = '<em class="openai-compatible-endpoint-option-custom-label">Add &ldquo;' + escHtml( query ) + '&rdquo;</em>';
-			list!.appendChild( li );
+			li.innerHTML = `<em class="openai-compatible-endpoint-option-custom-label">Add &ldquo;${ escHtml( query ) }&rdquo;</em>`;
+			fragment.appendChild( li );
 		}
 
 		// Render preset options matching the filter.
-		filtered.forEach( function( p ) {
+		filtered.forEach( ( p ) => {
 			const li = document.createElement( 'li' );
 			li.setAttribute( 'role', 'option' );
 			li.setAttribute( 'aria-selected', 'false' );
-			li.id = list!.id + '-opt-' + optIndex++;
-			li.dataset.url = p.url;
+			li.id = `${ list!.id }-opt-${ optIndex++ }`;
+			li.dataset[ 'url' ] = p.url;
 			li.className = 'openai-compatible-endpoint-option';
 			li.innerHTML =
-				'<strong class="openai-compatible-endpoint-option-label">' + highlight( p.label, query ) + '</strong>' +
-				'<span class="openai-compatible-endpoint-option-url">' + highlight( p.url, query ) + '</span>';
-			list!.appendChild( li );
+				`<strong class="openai-compatible-endpoint-option-label">${ highlight( p.label, query ) }</strong>` +
+				`<span class="openai-compatible-endpoint-option-url">${ highlight( p.url, query ) }</span>`;
+			fragment.appendChild( li );
 		} );
-	}
+
+		list!.appendChild( fragment );
+	};
 
 	// Opens the presets dropdown list.
-	function openList( query: string ): void {
+	const openList = ( query: string ): void => {
 		buildList( query );
 		list!.style.display = 'block';
 		searchInput.setAttribute( 'aria-expanded', 'true' );
 		if ( toggleBtn ) {
 			toggleBtn.setAttribute( 'aria-expanded', 'true' );
 		}
-	}
+	};
 
 	// Closes the presets dropdown list.
-	function closeList(): void {
+	const closeList = (): void => {
 		list!.style.display = 'none';
 		searchInput.setAttribute( 'aria-expanded', 'false' );
 		searchInput.removeAttribute( 'aria-activedescendant' );
 		if ( toggleBtn ) {
 			toggleBtn.setAttribute( 'aria-expanded', 'false' );
 		}
-	}
+	};
 
 	// Sets the selected URL to both the hidden inputs and visible input.
-	function selectUrl( url: string ): void {
+	const selectUrl = ( url: string ): void => {
 		hiddenInput.value = url;
 		searchInput.value = url;
 		closeList();
 		commitUrl( url );
-	}
+	};
 
 	// Highlights the hovered or navigated dropdown item.
-	function highlightItem( li: HTMLLIElement | null ): void {
-		list!.querySelectorAll( 'li' ).forEach( function( el ) {
+	const highlightItem = ( li: HTMLLIElement | null ): void => {
+		list!.querySelectorAll( 'li' ).forEach( ( el ) => {
 			el.classList.remove( 'openai-compatible-endpoint-option--active' );
 			el.setAttribute( 'aria-selected', 'false' );
 		} );
@@ -297,22 +297,22 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		} else {
 			searchInput.removeAttribute( 'aria-activedescendant' );
 		}
-	}
+	};
 
 	// Event listener to open dropdown list on search input focus.
-	searchInput.addEventListener( 'focus', function() {
+	searchInput.addEventListener( 'focus', () => {
 		openList( searchInput.value );
 	} );
 
 	// Event listener to filter dropdown options as the user types.
-	searchInput.addEventListener( 'input', function() {
+	searchInput.addEventListener( 'input', () => {
 		hiddenInput.value = searchInput.value;
 		openList( searchInput.value );
 	} );
 
 	// Event listener to toggle the visibility of the presets dropdown.
 	if ( toggleBtn ) {
-		toggleBtn.addEventListener( 'click', function() {
+		toggleBtn.addEventListener( 'click', () => {
 			if ( list.style.display === 'none' ) {
 				openList( searchInput.value );
 				searchInput.focus();
@@ -323,36 +323,36 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	}
 
 	// Prevent input focus loss when clicking list items.
-	list.addEventListener( 'mousedown', function( e ) {
+	list.addEventListener( 'mousedown', ( e ) => {
 		e.preventDefault();
 	} );
 
 	// Event listener to select the clicked preset option.
-	list.addEventListener( 'click', function( e ) {
+	list.addEventListener( 'click', ( e ) => {
 		const target = e.target as HTMLElement | null;
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' );
-		if ( li && li.dataset.url ) {
-			selectUrl( li.dataset.url );
+		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
+		if ( li && li.dataset[ 'url' ] ) {
+			selectUrl( li.dataset[ 'url' ] );
 		}
 	} );
 
 	// Event listener to highlight options on mouse hover.
-	list.addEventListener( 'mouseover', function( e ) {
+	list.addEventListener( 'mouseover', ( e ) => {
 		const target = e.target as HTMLElement | null;
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' );
+		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
 		if ( li ) {
 			highlightItem( li );
 		}
 	} );
 
 	// Event listener for keyboard navigation (Arrow Up, Arrow Down, Enter, Escape).
-	searchInput.addEventListener( 'keydown', function( e ) {
+	searchInput.addEventListener( 'keydown', ( e ) => {
 		if ( list.style.display === 'none' ) {
 			if ( e.key === 'ArrowDown' || e.key === 'ArrowUp' ) {
 				e.preventDefault();
@@ -362,9 +362,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		}
 
 		const items = Array.from( list.querySelectorAll<HTMLLIElement>( 'li[data-url]' ) );
-		const activeIndex = items.findIndex( function( el ) {
-			return el.classList.contains( 'openai-compatible-endpoint-option--active' );
-		} );
+		const activeIndex = items.findIndex( ( el ) => el.classList.contains( 'openai-compatible-endpoint-option--active' ) );
 
 		if ( e.key === 'ArrowDown' ) {
 			e.preventDefault();
@@ -377,8 +375,8 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		} else if ( e.key === 'Enter' ) {
 			e.preventDefault();
 			const highlighted = items[ activeIndex ];
-			if ( highlighted && highlighted.dataset.url ) {
-				selectUrl( highlighted.dataset.url );
+			if ( highlighted && highlighted.dataset[ 'url' ] ) {
+				selectUrl( highlighted.dataset[ 'url' ] );
 			} else {
 				hiddenInput.value = searchInput.value;
 				closeList();
@@ -390,9 +388,9 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	} );
 
 	// Event listener to close the dropdown list when focus leaves the combobox.
-	searchInput.addEventListener( 'blur', function() {
+	searchInput.addEventListener( 'blur', () => {
 		// Delay execution slightly to allow list click event handler to fire first.
-		setTimeout( function() {
+		setTimeout( () => {
 			const doc = searchInput.ownerDocument;
 			// Use searchInput's ownerDocument to access the active element to prevent eslint global activeElement warning.
 			if ( doc && doc.activeElement && ! wrapper.contains( doc.activeElement ) ) {
@@ -428,7 +426,7 @@ function init(): void {
 	 *
 	 * @param {string|null} overrideUrl Endpoint URL override, or null to use the saved setting. Pass '' to preview the default endpoint.
 	 */
-	function fetchModels( overrideUrl: string | null ): void {
+	const fetchModels = ( overrideUrl: string | null ): void => {
 		const gen = ++fetchGeneration;
 
 		setStatus( textStatus, i18n.loading || 'Loading models...', false );
@@ -447,10 +445,8 @@ function init(): void {
 		}
 
 		window.fetch( ajaxUrl, { method: 'POST', credentials: 'same-origin', body } )
-			.then( function( response ) {
-				return response.json() as Promise<{ success?: boolean; data?: OpenAiCompatibleModel[] }>;
-			} )
-			.then( function( payload ) {
+			.then( ( response ) => response.json() as Promise<{ success?: boolean; data?: OpenAiCompatibleModel[] }> )
+			.then( ( payload ) => {
 				// Discard response if a newer fetch has already been dispatched.
 				if ( gen !== fetchGeneration ) {
 					return;
@@ -461,22 +457,18 @@ function init(): void {
 				}
 
 				// Filter models for text and image SELECT elements.
-				const textModels = payload.data.filter( function( model ) {
-					return model && ! model.is_image;
-				} );
-				const imageModels = payload.data.filter( function( model ) {
-					return model && model.is_image;
-				} );
+				const textModels = payload.data.filter( ( model ) => model && ! model.is_image );
+				const imageModels = payload.data.filter( ( model ) => model && model.is_image );
 
 				// Populate SELECT elements, preserving the user's current selection.
 				clearAndFillSelect( textModelSelect, textModels, currentTextModel );
 				clearAndFillSelect( imageModelSelect, imageModels, currentImageModel );
 
 				const loadedMsg = i18n.loaded || 'models loaded.';
-				setStatus( textStatus, String( textModels.length ) + ' ' + loadedMsg, false );
-				setStatus( imageStatus, String( imageModels.length ) + ' ' + loadedMsg, false );
+				setStatus( textStatus, `${ textModels.length } ${ loadedMsg }`, false );
+				setStatus( imageStatus, `${ imageModels.length } ${ loadedMsg }`, false );
 			} )
-			.catch( function( error: unknown ) {
+			.catch( ( error: unknown ) => {
 				if ( gen !== fetchGeneration ) {
 					return;
 				}
@@ -485,7 +477,7 @@ function init(): void {
 				setStatus( textStatus, message, true );
 				setStatus( imageStatus, message, true );
 			} );
-	}
+	};
 
 	// Initialize the endpoint combobox; re-fetch models whenever the endpoint changes.
 	initEndpointPreset( fetchModels );
