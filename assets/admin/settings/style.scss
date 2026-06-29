@@ -1,10 +1,12 @@
 .universal-openai-connector-settings-wrap {
 	max-width: 56rem;
 }
+
 #openai-compatible-endpoint-combobox {
 	position: relative;
 	max-width: 25em;
 }
+
 .openai-compatible-endpoint-search-container {
 	display: flex;
 	align-items: center;
@@ -13,18 +15,23 @@
 	background: #fff;
 	padding: 0 10px;
 	box-sizing: border-box;
+
 	&:focus-within {
 		border-color: var(--wp-admin-theme-color);
 		box-shadow: 0 0 0 var(--wp-admin-border-width-focus, 1.5px) var(--wp-admin-theme-color);
 	}
 }
+
 .openai-compatible-endpoint-search-icon {
 	color: #8c8f94;
 	margin-right: 6px;
 	flex-shrink: 0;
 	line-height: 0;
 }
+
+/* stylelint-disable selector-id-pattern */
 #universal_openai_connector_settings-endpoint-url-search {
+
 	&.openai-compatible-endpoint-search-input {
 		border: none;
 		outline: none;
@@ -33,13 +40,16 @@
 		font-size: 14px;
 		background: transparent;
 		min-width: 0;
+
+		&:focus,
+		&:focus-visible {
+			outline: none;
+			box-shadow: none;
+		}
 	}
 }
-#universal_openai_connector_settings-endpoint-url-search.openai-compatible-endpoint-search-input:focus,
-#universal_openai_connector_settings-endpoint-url-search.openai-compatible-endpoint-search-input:focus-visible {
-	outline: none;
-	box-shadow: none;
-}
+/* stylelint-enable selector-id-pattern */
+
 #openai-compatible-endpoint-toggle {
 	background: none;
 	border: none;
@@ -50,6 +60,7 @@
 	line-height: 0;
 	transition: transform 0.15s;
 }
+
 .openai-compatible-endpoint-presets-list {
 	display: none;
 	position: absolute;
@@ -68,42 +79,53 @@
 	box-sizing: border-box;
 	overflow-x: hidden;
 }
+
 .openai-compatible-endpoint-description {
 	max-width: 25em;
 }
+
 #openai-compatible-endpoint-toggle[aria-expanded="true"] {
 	transform: rotate(180deg);
 }
+
 .openai-compatible-endpoint-option {
 	padding: 8px 12px;
 	cursor: pointer;
 }
+
 .openai-compatible-endpoint-option--custom {
 	border-bottom: 1px solid #f0f0f1;
 }
+
 .openai-compatible-endpoint-option--active {
 	background: #f0f6fc;
 }
+
 .openai-compatible-endpoint-option-label {
 	display: block;
 	font-size: 13px;
 }
+
 .openai-compatible-endpoint-option-url {
 	font-size: 12px;
 	color: #646970;
 }
+
 .openai-compatible-endpoint-option-custom-label {
 	color: #2271b1;
 }
+
 .openai-compatible-endpoint-highlight {
 	background: #fff3cd;
 	padding: 0;
 }
+
 .openai-compatible-model-status {
 	margin-left: 8px;
 	font-size: 12px;
 	color: #50575e;
 }
+
 .openai-compatible-model-status--error {
 	color: #d63638;
 }
