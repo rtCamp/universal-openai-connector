@@ -161,7 +161,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	}
 
 	const searchInput = document.getElementById( 'universal_openai_connector_settings-endpoint-url-search' ) as HTMLInputElement | null;
-	const list = wrapper.querySelector( 'ul[role="listbox"]' ) as HTMLUListElement | null;
+	const list = wrapper.querySelector( 'ul[role="listbox"]' );
 
 	if ( ! searchInput || ! list ) {
 		return;
@@ -191,7 +191,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	// Parse the presets data attribute passed from PHP.
 	let presets: Preset[] = [];
 	try {
-		presets = JSON.parse( wrapper.dataset[ 'presets' ] || '[]' ) as Preset[];
+		presets = JSON.parse( wrapper.dataset.presets || '[]' ) as Preset[];
 	} catch ( e ) {
 		presets = [];
 	}
@@ -213,7 +213,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 
 	// Constructs the dropdown list options based on user search query.
 	const buildList = ( query: string ): void => {
-		list!.textContent = '';
+		list.textContent = '';
 		const q = normalise( query );
 
 		const fragment = document.createDocumentFragment();
@@ -232,8 +232,8 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 			const li = document.createElement( 'li' );
 			li.setAttribute( 'role', 'option' );
 			li.setAttribute( 'aria-selected', 'false' );
-			li.id = `${ list!.id }-opt-${ optIndex++ }`;
-			li.dataset[ 'url' ] = query;
+			li.id = `${ list.id }-opt-${ optIndex++ }`;
+			li.dataset.url = query;
 			li.className = 'openai-compatible-endpoint-option openai-compatible-endpoint-option--custom';
 			li.innerHTML = `<em class="openai-compatible-endpoint-option-custom-label">Add &ldquo;${ escHtml( query ) }&rdquo;</em>`;
 			fragment.appendChild( li );
@@ -244,8 +244,8 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 			const li = document.createElement( 'li' );
 			li.setAttribute( 'role', 'option' );
 			li.setAttribute( 'aria-selected', 'false' );
-			li.id = `${ list!.id }-opt-${ optIndex++ }`;
-			li.dataset[ 'url' ] = p.url;
+			li.id = `${ list.id }-opt-${ optIndex++ }`;
+			li.dataset.url = p.url;
 			li.className = 'openai-compatible-endpoint-option';
 			li.innerHTML =
 				`<strong class="openai-compatible-endpoint-option-label">${ highlight( p.label, query ) }</strong>` +
@@ -253,13 +253,13 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 			fragment.appendChild( li );
 		} );
 
-		list!.appendChild( fragment );
+		list.appendChild( fragment );
 	};
 
 	// Opens the presets dropdown list.
 	const openList = ( query: string ): void => {
 		buildList( query );
-		list!.style.display = 'block';
+		list.style.display = 'block';
 		searchInput.setAttribute( 'aria-expanded', 'true' );
 		if ( toggleBtn ) {
 			toggleBtn.setAttribute( 'aria-expanded', 'true' );
@@ -268,7 +268,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 
 	// Closes the presets dropdown list.
 	const closeList = (): void => {
-		list!.style.display = 'none';
+		list.style.display = 'none';
 		searchInput.setAttribute( 'aria-expanded', 'false' );
 		searchInput.removeAttribute( 'aria-activedescendant' );
 		if ( toggleBtn ) {
@@ -286,7 +286,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 
 	// Highlights the hovered or navigated dropdown item.
 	const highlightItem = ( li: HTMLLIElement | null ): void => {
-		list!.querySelectorAll( 'li' ).forEach( ( el ) => {
+		list.querySelectorAll( 'li' ).forEach( ( el ) => {
 			el.classList.remove( 'openai-compatible-endpoint-option--active' );
 			el.setAttribute( 'aria-selected', 'false' );
 		} );
@@ -333,9 +333,9 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
-		if ( li && li.dataset[ 'url' ] ) {
-			selectUrl( li.dataset[ 'url' ] );
+		const li = target.closest( 'li[data-url]' );
+		if ( li && li.dataset.url ) {
+			selectUrl( li.dataset.url );
 		}
 	} );
 
@@ -345,7 +345,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
+		const li = target.closest( 'li[data-url]' );
 		if ( li ) {
 			highlightItem( li );
 		}
@@ -375,8 +375,8 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		} else if ( e.key === 'Enter' ) {
 			e.preventDefault();
 			const highlighted = items[ activeIndex ];
-			if ( highlighted && highlighted.dataset[ 'url' ] ) {
-				selectUrl( highlighted.dataset[ 'url' ] );
+			if ( highlighted && highlighted.dataset.url ) {
+				selectUrl( highlighted.dataset.url );
 			} else {
 				hiddenInput.value = searchInput.value;
 				closeList();
@@ -433,8 +433,8 @@ function init(): void {
 		setStatus( imageStatus, i18n.loading || 'Loading models...', false );
 
 		// Capture current select values before the async response arrives.
-		const currentTextModel = textModelSelect!.value;
-		const currentImageModel = imageModelSelect!.value;
+		const currentTextModel = textModelSelect.value;
+		const currentImageModel = imageModelSelect.value;
 
 		// POST so the optional endpoint_url body parameter reaches the AJAX handler.
 		// null means "no override"; any string (including '') is sent explicitly so PHP can
