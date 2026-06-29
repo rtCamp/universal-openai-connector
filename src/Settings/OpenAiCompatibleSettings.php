@@ -551,8 +551,9 @@ class OpenAiCompatibleSettings {
 						}
 
 						return [
-							'id'   => $id,
-							'name' => $name,
+							'id'       => $id,
+							'name'     => $name,
+							'is_image' => self::is_likely_image_model( $id ),
 						];
 					},
 					$raw_models
@@ -802,8 +803,9 @@ class OpenAiCompatibleSettings {
 						}
 
 						return [
-							'id'   => $id,
-							'name' => $name,
+							'id'       => $id,
+							'name'     => $name,
+							'is_image' => self::is_likely_image_model( $id ),
 						];
 					},
 					$raw_models
@@ -845,6 +847,10 @@ class OpenAiCompatibleSettings {
 			'wuerstchen',
 			'stable-cascade',
 			'playground-v',
+			'riverflow',
+			'recraft',
+			'seedream',
+			'imagine',
 			// Segment-based patterns: hyphens and slashes act as word separators in model IDs.
 			'-image',
 			'/image',

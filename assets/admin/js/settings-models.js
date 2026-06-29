@@ -412,13 +412,21 @@
 						throw new Error( i18n.errorLoad || 'Could not load models from endpoint.' );
 					}
 
-					// Populate SELECT elements, preserving the user's current selection.
-					clearAndFillSelect( textModelSelect, payload.data, currentTextModel );
-					clearAndFillSelect( imageModelSelect, payload.data, currentImageModel );
+					// Filter models for text and image SELECT elements.
+					const textModels = payload.data.filter( function( model ) {
+						return model && ! model.is_image;
+					} );
+					const imageModels = payload.data.filter( function( model ) {
+						return model && model.is_image;
+					} );
 
-					const countText = String( payload.data.length ) + ' ' + ( i18n.loaded || 'models loaded.' );
-					setStatus( textStatus, countText, false );
-					setStatus( imageStatus, countText, false );
+					// Populate SELECT elements, preserving the user's current selection.
+					clearAndFillSelect( textModelSelect, textModels, currentTextModel );
+					clearAndFillSelect( imageModelSelect, imageModels, currentImageModel );
+
+					const loadedMsg = i18n.loaded || 'models loaded.';
+					setStatus( textStatus, String( textModels.length ) + ' ' + loadedMsg, false );
+					setStatus( imageStatus, String( imageModels.length ) + ' ' + loadedMsg, false );
 				} )
 				.catch( function( error ) {
 					if ( gen !== fetchGeneration ) {
