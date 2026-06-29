@@ -44,14 +44,14 @@ const i18n = settings.i18n || {};
 /**
  * Helper function to clear and populate a SELECT element with models.
  *
- * @param selectEl      The select element to populate.
- * @param models        List of available models.
- * @param selectedModel The currently selected model value.
+ * @param {HTMLSelectElement|null}  selectEl      The select element to populate.
+ * @param {OpenAiCompatibleModel[]} models        List of available models.
+ * @param {string}                  selectedModel The currently selected model value.
  */
 function clearAndFillSelect(
 	selectEl: HTMLSelectElement | null,
 	models: OpenAiCompatibleModel[],
-	selectedModel: string
+	selectedModel: string,
 ): void {
 	if ( ! selectEl ) {
 		return;
@@ -113,9 +113,9 @@ function clearAndFillSelect(
 /**
  * Sets the status message and styling for model loading.
  *
- * @param statusEl The element displaying the status.
- * @param message  The message to display.
- * @param isError  Whether this is an error message.
+ * @param {HTMLElement|null} statusEl The element displaying the status.
+ * @param {string}           message  The message to display.
+ * @param {boolean}          isError  Whether this is an error message.
  */
 function setStatus( statusEl: HTMLElement | null, message: string, isError: boolean ): void {
 	if ( ! statusEl ) {
@@ -128,8 +128,8 @@ function setStatus( statusEl: HTMLElement | null, message: string, isError: bool
 /**
  * Simple HTML escaping utility to prevent XSS.
  *
- * @param str Unescaped HTML string.
- * @return Escaped HTML string.
+ * @param {string} str Unescaped HTML string.
+ * @return {string} Escaped HTML string.
  *
  * @since 1.0.1
  */
@@ -143,7 +143,8 @@ function escHtml( str: string ): string {
 
 /**
  * Initializes the endpoint preset combobox component.
- * @param onEndpointCommit Callback function when an endpoint is committed.
+ *
+ * @param {Function} [onEndpointCommit] Callback function when an endpoint is committed.
  * @since 1.0.1
  */
 function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void {
@@ -156,7 +157,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	}
 
 	const searchInput = document.getElementById( 'universal_openai_connector_settings-endpoint-url-search' ) as HTMLInputElement | null;
-	const list = wrapper.querySelector( 'ul[role="listbox"]' ) as HTMLUListElement | null;
+	const list = wrapper.querySelector( 'ul[role="listbox"]' );
 
 	if ( ! searchInput || ! list ) {
 		return;
@@ -312,7 +313,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 	// Event listener to toggle the visibility of the presets dropdown.
 	if ( toggleBtn ) {
 		toggleBtn.addEventListener( 'click', function() {
-			if ( list!.style.display === 'none' ) {
+			if ( list.style.display === 'none' ) {
 				openList( searchInput.value );
 				searchInput.focus();
 			} else {
@@ -332,7 +333,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
+		const li = target.closest( 'li[data-url]' );
 		if ( li && li.dataset.url ) {
 			selectUrl( li.dataset.url );
 		}
@@ -344,7 +345,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 		if ( ! target ) {
 			return;
 		}
-		const li = target.closest( 'li[data-url]' ) as HTMLLIElement | null;
+		const li = target.closest( 'li[data-url]' );
 		if ( li ) {
 			highlightItem( li );
 		}
@@ -352,7 +353,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 
 	// Event listener for keyboard navigation (Arrow Up, Arrow Down, Enter, Escape).
 	searchInput.addEventListener( 'keydown', function( e ) {
-		if ( list!.style.display === 'none' ) {
+		if ( list.style.display === 'none' ) {
 			if ( e.key === 'ArrowDown' || e.key === 'ArrowUp' ) {
 				e.preventDefault();
 				openList( searchInput.value );
@@ -360,7 +361,7 @@ function initEndpointPreset( onEndpointCommit?: ( url: string ) => void ): void 
 			return;
 		}
 
-		const items = Array.from( list!.querySelectorAll<HTMLLIElement>( 'li[data-url]' ) );
+		const items = Array.from( list.querySelectorAll<HTMLLIElement>( 'li[data-url]' ) );
 		const activeIndex = items.findIndex( function( el ) {
 			return el.classList.contains( 'openai-compatible-endpoint-option--active' );
 		} );
@@ -415,8 +416,8 @@ function init(): void {
 		return;
 	}
 
-	const textStatus = document.getElementById( 'openai-compatible-text-model-status' ) as HTMLElement | null;
-	const imageStatus = document.getElementById( 'openai-compatible-image-model-status' ) as HTMLElement | null;
+	const textStatus = document.getElementById( 'openai-compatible-text-model-status' );
+	const imageStatus = document.getElementById( 'openai-compatible-image-model-status' );
 	const ajaxUrl = settings.ajaxUrl || '';
 
 	// Generation counter: each new fetch increments it so stale responses are discarded.
@@ -425,7 +426,7 @@ function init(): void {
 	/**
 	 * Fetches the model list and refreshes both SELECT elements.
 	 *
-	 * @param overrideUrl Endpoint URL override, or null to use the saved setting. Pass '' to preview the default endpoint.
+	 * @param {string|null} overrideUrl Endpoint URL override, or null to use the saved setting. Pass '' to preview the default endpoint.
 	 */
 	function fetchModels( overrideUrl: string | null ): void {
 		const gen = ++fetchGeneration;
