@@ -1,4 +1,4 @@
-=== Universal Open AI Connector ===
+=== Universal OpenAI Connector ===
 Contributors:      rtcamp, milindmore22, vishal4669, aishwarryapande, aviralmittal89
 Tags:              ai, openai, llm, text-generation, image-generation
 Requires at least: 7.0

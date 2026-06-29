@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Universal Open AI Connector
+ * Plugin Name:       Universal OpenAI Connector
  * Plugin URI:        https://github.com/rtcamp/universal-openai-connector
  * Description:       OpenAI-compatible provider for the WordPress AI Client with configurable endpoint and default text/image models.
  * Requires at least: 7.0
