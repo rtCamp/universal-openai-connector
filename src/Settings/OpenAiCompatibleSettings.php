@@ -399,20 +399,28 @@ class OpenAiCompatibleSettings {
 			return;
 		}
 
-		wp_enqueue_style(
-			'universal-openai-connector-settings',
-			plugins_url( 'assets/admin/css/settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
-			[],
-			UNIVERSAL_OPENAI_CONNECTOR_VERSION
-		);
+		$plugin_dir = UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR;
+		$asset_file = $plugin_dir . 'build/admin/settings.asset.php';
+		$asset      = file_exists( $asset_file ) ? require $asset_file : []; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Asset file path is built from a known constant.
+
+		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
+		$version      = isset( $asset['version'] ) ? $asset['version'] : UNIVERSAL_OPENAI_CONNECTOR_VERSION;
 
 		wp_enqueue_script(
 			'universal-openai-connector-settings',
-			plugins_url( 'assets/admin/js/settings-models.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
-			[],
-			UNIVERSAL_OPENAI_CONNECTOR_VERSION,
+			plugins_url( 'build/admin/settings.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			$dependencies,
+			$version,
 			true
 		);
+
+		wp_enqueue_style(
+			'universal-openai-connector-settings',
+			plugins_url( 'build/admin/style-settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			[],
+			$version
+		);
+		wp_style_add_data( 'universal-openai-connector-settings', 'rtl', 'replace' );
 
 		wp_localize_script(
 			'universal-openai-connector-settings',
