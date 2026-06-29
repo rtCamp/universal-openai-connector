@@ -7,7 +7,7 @@
 
 ## 1.0.0
 
-- Initial release of Universal Open AI Connector.
+- Initial release of Universal OpenAI Connector.
 - OpenAI-compatible REST API model discovery, text generation, and image generation support.
 - Multimodal (vision) input support for vision-capable models.
 - Admin settings page for API endpoint URL, default text model, and default image model.

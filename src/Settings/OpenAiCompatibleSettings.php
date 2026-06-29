@@ -106,8 +106,8 @@ class OpenAiCompatibleSettings {
 	 */
 	public function register_settings_screen(): void {
 		add_options_page(
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			[ $this, 'render_screen' ]
@@ -206,7 +206,7 @@ class OpenAiCompatibleSettings {
 				<?php
 				printf(
 					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal Open AI Connector provider.', 'universal-openai-connector' ),
+					esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal OpenAI Connector provider.', 'universal-openai-connector' ),
 					'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
 					'</a>'
 				);

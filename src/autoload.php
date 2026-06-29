@@ -1,6 +1,6 @@
 <?php
 /**
- * PSR-4 autoloader for Universal Open AI Connector.
+ * PSR-4 autoloader for Universal OpenAI Connector.
  *
  * @since 1.0.0
  * @package rtCamp\UniversalOpenAiConnector
