@@ -1,0 +1,46 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig.json",
+
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strictFunctionTypes": true,
+		"module": "nodenext",
+		"resolveJsonModule": true,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"esModuleInterop": false,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": false,
+		"jsx": "react-jsx",
+		"lib": ["ES2022", "DOM.Iterable", "DOM"],
+		"moduleDetection": "force",
+		"target": "ES2022",
+		"composite": true,
+		"disableSourceOfProjectReferenceRedirect": true,
+		"incremental": true,
+		"skipLibCheck": true,
+		"typeRoots": ["./node_modules/@types"],
+		"baseUrl": "./assets/admin",
+		"outDir": "./build",
+		"paths": {
+			"@/*": ["./*"]
+		}
+	},
+	"include": ["assets/admin/**/*", "**/*.ts", "**/*.tsx"],
+	"exclude": ["**/build/*", "**/tests/**", "vendor/*", "node_modules/*"]
+}

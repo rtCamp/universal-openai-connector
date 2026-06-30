@@ -1,6 +1,15 @@
 {
 	"name": "universal-openai-connector",
 	"private": true,
+	"files": [
+		"build",
+		"assets/images",
+		"languages",
+		"src",
+		"README.md",
+		"readme.txt",
+		"universal-openai-connector.php"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/rtcamp/universal-openai-connector.git"
@@ -37,6 +46,8 @@
 		"typescript": "^5.9.3"
 	},
 	"scripts": {
+		"build": "wp-scripts build",
+		"dev": "wp-scripts start",
 		"lint:css": "wp-scripts lint-style",
 		"lint:css:fix": "wp-scripts lint-style --fix",
 		"lint:js:fix": "npm run lint:js -- --fix",
@@ -46,7 +57,7 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "sh ./bin/plugin-zip.sh"
+		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",

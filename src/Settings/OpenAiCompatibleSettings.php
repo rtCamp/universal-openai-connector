@@ -106,8 +106,8 @@ class OpenAiCompatibleSettings {
 	 */
 	public function register_settings_screen(): void {
 		add_options_page(
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			[ $this, 'render_screen' ]
@@ -206,7 +206,7 @@ class OpenAiCompatibleSettings {
 				<?php
 				printf(
 					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal Open AI Connector provider.', 'universal-openai-connector' ),
+					esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal OpenAI Connector provider.', 'universal-openai-connector' ),
 					'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
 					'</a>'
 				);
@@ -239,7 +239,7 @@ class OpenAiCompatibleSettings {
 				'Together AI'  => 'https://api.together.xyz/v1',
 				'Groq'         => 'https://api.groq.com/openai/v1',
 				'Fireworks AI' => 'https://api.fireworks.ai/inference/v1',
-				'Xiaomi AI'    => 'https://api.ai.xiaomi.com/v1',
+				'Xiaomi AI'    => 'https://api.xiaomimimo.com/v1',
 				'NVIDIA NIM'   => 'https://integrate.api.nvidia.com/v1',
 				'OpenRouter'   => 'https://openrouter.ai/api/v1',
 				'Google'       => 'https://generativelanguage.googleapis.com/v1beta/openai',
@@ -399,20 +399,28 @@ class OpenAiCompatibleSettings {
 			return;
 		}
 
-		wp_enqueue_style(
-			'universal-openai-connector-settings',
-			plugins_url( 'assets/admin/css/settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
-			[],
-			UNIVERSAL_OPENAI_CONNECTOR_VERSION
-		);
+		$plugin_dir = UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR;
+		$asset_file = $plugin_dir . 'build/admin/settings.asset.php';
+		$asset      = file_exists( $asset_file ) ? require $asset_file : []; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Asset file path is built from a known constant.
+
+		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
+		$version      = isset( $asset['version'] ) ? $asset['version'] : UNIVERSAL_OPENAI_CONNECTOR_VERSION;
 
 		wp_enqueue_script(
 			'universal-openai-connector-settings',
-			plugins_url( 'assets/admin/js/settings-models.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
-			[],
-			UNIVERSAL_OPENAI_CONNECTOR_VERSION,
+			plugins_url( 'build/admin/settings.js', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			$dependencies,
+			$version,
 			true
 		);
+
+		wp_enqueue_style(
+			'universal-openai-connector-settings',
+			plugins_url( 'build/admin/style-settings.css', UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE ),
+			[],
+			$version
+		);
+		wp_style_add_data( 'universal-openai-connector-settings', 'rtl', 'replace' );
 
 		wp_localize_script(
 			'universal-openai-connector-settings',
