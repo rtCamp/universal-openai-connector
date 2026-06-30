@@ -358,10 +358,12 @@ class OpenAiCompatibleSettings {
 		$id       = self::OPTION_NAME . '-text-model';
 		$name     = self::OPTION_NAME . '[' . self::KEY_TEXT_MODEL . ']';
 		?>
-		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
-			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
-		</select>
-		<span id="openai-compatible-text-model-status" class="openai-compatible-model-status"></span>
+		<div class="openai-compatible-model-select-wrapper">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
+				<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
+			</select>
+			<span id="openai-compatible-text-model-status" class="openai-compatible-model-status"></span>
+		</div>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>
@@ -379,10 +381,12 @@ class OpenAiCompatibleSettings {
 		$id       = self::OPTION_NAME . '-image-model';
 		$name     = self::OPTION_NAME . '[' . self::KEY_IMAGE_MODEL . ']';
 		?>
-		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
-			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
-		</select>
-		<span id="openai-compatible-image-model-status" class="openai-compatible-model-status"></span>
+		<div class="openai-compatible-model-select-wrapper">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
+				<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
+			</select>
+			<span id="openai-compatible-image-model-status" class="openai-compatible-model-status"></span>
+		</div>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>

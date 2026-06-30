@@ -337,3 +337,13 @@
 		box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
 	}
 }
+
+.openai-compatible-model-select-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+
+	select.regular-text {
+		flex-shrink: 0;
+	}
+}
