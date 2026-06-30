@@ -106,8 +106,8 @@ class OpenAiCompatibleSettings {
 	 */
 	public function register_settings_screen(): void {
 		add_options_page(
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
-			__( 'Universal Open AI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
+			__( 'Universal OpenAI Connector Settings', 'universal-openai-connector' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			[ $this, 'render_screen' ]
@@ -202,7 +202,7 @@ class OpenAiCompatibleSettings {
 		<div class="wrap universal-openai-connector-settings-wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			<p><?php esc_html_e( 'Configure an OpenAI-compatible endpoint and choose default models used for text and image generation.', 'universal-openai-connector' ); ?></p>
-			
+
 			<div class="universal-openai-connector-info-banner">
 				<span class="universal-openai-connector-banner-icon" aria-hidden="true">
 					<img src="<?php echo esc_url( UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_URL . 'assets/images/info.svg' ); ?>" width="18" height="18" alt="" />
@@ -211,7 +211,7 @@ class OpenAiCompatibleSettings {
 					<?php
 					printf(
 						/* translators: 1: opening anchor tag, 2: closing anchor tag */
-						esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal Open AI Connector provider.', 'universal-openai-connector' ),
+						esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal OpenAI Connector provider.', 'universal-openai-connector' ),
 						'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
 						'</a>'
 					);
