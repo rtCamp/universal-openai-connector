@@ -57,7 +57,8 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "wp-scripts plugin-zip"
+		"plugin-zip": "wp-scripts plugin-zip",
+		"guidance:list": "npx -y modern-web-guidance@latest list"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",
