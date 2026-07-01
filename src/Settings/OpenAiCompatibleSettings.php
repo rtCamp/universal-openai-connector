@@ -202,17 +202,24 @@ class OpenAiCompatibleSettings {
 		<div class="wrap universal-openai-connector-settings-wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			<p><?php esc_html_e( 'Configure an OpenAI-compatible endpoint and choose default models used for text and image generation.', 'universal-openai-connector' ); ?></p>
-			<p>
-				<?php
-				printf(
-					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal OpenAI Connector provider.', 'universal-openai-connector' ),
-					'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
-					'</a>'
-				);
-				?>
-			</p>
-			<form action="options.php" method="post">
+
+			<div class="universal-openai-connector-info-banner">
+				<span class="universal-openai-connector-banner-icon" aria-hidden="true">
+					<img src="<?php echo esc_url( UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_URL . 'assets/images/info.svg' ); ?>" width="18" height="18" alt="" />
+				</span>
+				<p>
+					<?php
+					printf(
+						/* translators: 1: opening anchor tag, 2: closing anchor tag */
+						esc_html__( 'Set your API key under %1$sSettings > Connectors%2$s for the Universal OpenAI Connector provider.', 'universal-openai-connector' ),
+						'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
+						'</a>'
+					);
+					?>
+				</p>
+			</div>
+
+			<form action="options.php" method="post" class="universal-openai-connector-card">
 				<?php
 				settings_fields( self::OPTION_GROUP );
 				do_settings_sections( self::PAGE_SLUG );
@@ -239,7 +246,7 @@ class OpenAiCompatibleSettings {
 				'Together AI'  => 'https://api.together.xyz/v1',
 				'Groq'         => 'https://api.groq.com/openai/v1',
 				'Fireworks AI' => 'https://api.fireworks.ai/inference/v1',
-				'Xiaomi AI'    => 'https://api.xiaomimimo.com/v1',
+				'Xiaomi AI'    => 'https://api.ai.xiaomi.com/v1',
 				'NVIDIA NIM'   => 'https://integrate.api.nvidia.com/v1',
 				'OpenRouter'   => 'https://openrouter.ai/api/v1',
 				'Google'       => 'https://generativelanguage.googleapis.com/v1beta/openai',
@@ -295,10 +302,7 @@ class OpenAiCompatibleSettings {
 		>
 			<div class="openai-compatible-endpoint-search-container">
 				<span class="openai-compatible-endpoint-search-icon" aria-hidden="true">
-					<svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<circle cx="8.5" cy="8.5" r="5.75" stroke="currentColor" stroke-width="1.75"/>
-						<path d="M13 13L17 17" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-					</svg>
+					<img src="<?php echo esc_url( UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_URL . 'assets/images/search.svg' ); ?>" width="14" height="14" alt="" />
 				</span>
 				<input
 					type="text"
@@ -322,9 +326,7 @@ class OpenAiCompatibleSettings {
 					aria-expanded="false"
 					aria-controls="<?php echo esc_attr( $id ); ?>-listbox"
 				>
-					<svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-						<path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
+					<img src="<?php echo esc_url( UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_URL . 'assets/images/chevron-down.svg' ); ?>" width="14" height="14" alt="" aria-hidden="true" />
 				</button>
 			</div>
 			<ul
@@ -356,10 +358,12 @@ class OpenAiCompatibleSettings {
 		$id       = self::OPTION_NAME . '-text-model';
 		$name     = self::OPTION_NAME . '[' . self::KEY_TEXT_MODEL . ']';
 		?>
-		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
-			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
-		</select>
-		<span id="openai-compatible-text-model-status" class="openai-compatible-model-status"></span>
+		<div class="openai-compatible-model-select-wrapper">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
+				<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
+			</select>
+			<span id="openai-compatible-text-model-status" class="openai-compatible-model-status"></span>
+		</div>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>
@@ -377,10 +381,12 @@ class OpenAiCompatibleSettings {
 		$id       = self::OPTION_NAME . '-image-model';
 		$name     = self::OPTION_NAME . '[' . self::KEY_IMAGE_MODEL . ']';
 		?>
-		<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
-			<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
-		</select>
-		<span id="openai-compatible-image-model-status" class="openai-compatible-model-status"></span>
+		<div class="openai-compatible-model-select-wrapper">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" class="regular-text">
+				<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
+			</select>
+			<span id="openai-compatible-image-model-status" class="openai-compatible-model-status"></span>
+		</div>
 		<p class="description">
 			<?php esc_html_e( 'Optional override. Leave as "Use AI Client default" to let WordPress AI Client choose.', 'universal-openai-connector' ); ?>
 		</p>

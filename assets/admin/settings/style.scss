@@ -1,10 +1,118 @@
 .universal-openai-connector-settings-wrap {
-	max-width: 56rem;
+	max-width: 60rem;
+	margin: 24px auto 24px 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+	h1 {
+		font-size: 24px;
+		font-weight: 600;
+		color: #1e293b;
+		margin-bottom: 8px;
+	}
+
+	> p {
+		font-size: 14px;
+		color: #64748b;
+		margin-top: 0;
+		margin-bottom: 20px;
+		max-width: 48rem;
+		line-height: 1.5;
+	}
+
+	.universal-openai-connector-card {
+		background: #fff;
+		border: 1px solid #e2e8f0;
+		border-radius: 12px;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+		padding: 32px;
+		margin-top: 24px;
+		box-sizing: border-box;
+
+		.form-table {
+			margin: 0;
+			width: 100%;
+
+			th {
+				padding: 20px 16px 20px 0;
+				width: 200px;
+				font-weight: 600;
+				color: #334155;
+				font-size: 14px;
+				vertical-align: middle;
+			}
+
+			td {
+				padding: 16px 0;
+				vertical-align: middle;
+			}
+		}
+
+		.submit {
+			margin-top: 24px;
+			padding-top: 24px;
+			border-top: 1px solid #f1f5f9;
+			margin-bottom: 0;
+			padding-bottom: 0;
+
+			.button-primary {
+				background: #2271b1;
+				border-color: #2271b1;
+				border-radius: 6px;
+				padding: 0 20px;
+				height: 40px;
+				line-height: 38px;
+				font-size: 14px;
+				font-weight: 500;
+				transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+				&:hover {
+					background: #135e96;
+					border-color: #135e96;
+				}
+			}
+		}
+	}
+}
+
+.universal-openai-connector-info-banner {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #f0f9ff;
+	border: 1px solid #bae6fd;
+	border-radius: 8px;
+	padding: 12px 16px;
+	margin: 16px 0;
+	max-width: 60rem;
+	box-sizing: border-box;
+
+	.universal-openai-connector-banner-icon {
+		color: #0284c7;
+		flex-shrink: 0;
+		line-height: 0;
+	}
+
+	p {
+		margin: 0;
+		font-size: 13.5px;
+		color: #0369a1;
+		line-height: 1.4;
+
+		a {
+			color: #0284c7;
+			text-decoration: underline;
+			font-weight: 500;
+
+			&:hover {
+				color: #0369a1;
+			}
+		}
+	}
 }
 
 #openai-compatible-endpoint-combobox {
 	position: relative;
-	max-width: 25em;
+	max-width: 28rem;
 }
 
 .openai-compatible-endpoint-search-container {
@@ -15,6 +123,8 @@
 	background: #fff;
 	padding: 0 10px;
 	box-sizing: border-box;
+	min-height: 40px;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
 	&:focus-within {
 		border-color: var(--wp-admin-theme-color);
@@ -61,6 +171,10 @@
 	transition: transform 0.15s;
 }
 
+#openai-compatible-endpoint-toggle[aria-expanded="true"] {
+	transform: rotate(180deg);
+}
+
 .openai-compatible-endpoint-presets-list {
 	display: none;
 	position: absolute;
@@ -75,57 +189,164 @@
 	list-style: none;
 	max-height: 260px;
 	overflow-y: auto;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 	box-sizing: border-box;
 	overflow-x: hidden;
 }
 
 .openai-compatible-endpoint-description {
-	max-width: 25em;
-}
-
-#openai-compatible-endpoint-toggle[aria-expanded="true"] {
-	transform: rotate(180deg);
+	max-width: 28rem;
+	margin-top: 8px;
+	color: #64748b;
+	font-size: 12px;
 }
 
 .openai-compatible-endpoint-option {
-	padding: 8px 12px;
+	padding: 10px 14px;
 	cursor: pointer;
+	transition: background 0.1s ease-in-out;
 }
 
 .openai-compatible-endpoint-option--custom {
-	border-bottom: 1px solid #f0f0f1;
+	border-bottom: 1px solid #f1f5f9;
 }
 
 .openai-compatible-endpoint-option--active {
-	background: #f0f6fc;
+	background: #f1f5f9;
 }
 
 .openai-compatible-endpoint-option-label {
 	display: block;
-	font-size: 13px;
+	font-size: 13.5px;
+	font-weight: 500;
+	color: #1e293b;
 }
 
 .openai-compatible-endpoint-option-url {
-	font-size: 12px;
-	color: #646970;
+	font-size: 11.5px;
+	color: #64748b;
+	display: block;
+	margin-top: 2px;
 }
 
 .openai-compatible-endpoint-option-custom-label {
 	color: #2271b1;
+	font-weight: 500;
 }
 
 .openai-compatible-endpoint-highlight {
-	background: #fff3cd;
-	padding: 0;
+	background: #fef08a;
+	padding: 0 2px;
+	border-radius: 2px;
+	color: #854d0e;
+	font-weight: 600;
 }
+
+.openai-compatible-model-select-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+
+	select.regular-text {
+		flex-shrink: 0;
+	}
+}
+
+/* stylelint-disable selector-id-pattern */
+.universal-openai-connector-card select.regular-text {
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	background-color: #fff;
+	font-size: 14px;
+	height: 40px;
+	width: 100%;
+	max-width: 28rem;
+	box-sizing: border-box;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	appearance: none;
+	background-image: url(../../images/chevron-down.svg);
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+
+	&:focus {
+		border-color: var(--wp-admin-theme-color);
+		box-shadow: 0 0 0 var(--wp-admin-border-width-focus, 1.5px) var(--wp-admin-theme-color);
+		outline: none;
+	}
+}
+/* stylelint-enable selector-id-pattern */
 
 .openai-compatible-model-status {
-	margin-left: 8px;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: 12px;
 	font-size: 12px;
-	color: #50575e;
+	font-weight: 500;
+	color: #64748b;
+	padding: 4px 10px;
+	border-radius: 9999px;
+	background: #f1f5f9;
+	border: 1px solid #e2e8f0;
+	vertical-align: middle;
+	transition: all 0.2s ease-in-out;
+
+	&::before {
+		content: "";
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #94a3b8;
+		flex-shrink: 0;
+	}
+
+	&.openai-compatible-model-status--success {
+		background: #f0fdf4;
+		border-color: #bbf7d0;
+		color: #166534;
+
+		&::before {
+			background: #22c55e;
+		}
+	}
+
+	&.openai-compatible-model-status--loading {
+		background: #fef9c3;
+		border-color: #fef08a;
+		color: #854d0e;
+
+		&::before {
+			background: #eab308;
+			animation: openai-pulse 1.5s infinite;
+		}
+	}
+
+	&.openai-compatible-model-status--error {
+		background: #fef2f2;
+		border-color: #fecaca;
+		color: #991b1b;
+
+		&::before {
+			background: #ef4444;
+		}
+	}
 }
 
-.openai-compatible-model-status--error {
-	color: #d63638;
+@keyframes openai-pulse {
+
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.7);
+	}
+
+	70% {
+		transform: scale(1.1);
+		box-shadow: 0 0 0 4px rgba(234, 179, 8, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+	}
 }

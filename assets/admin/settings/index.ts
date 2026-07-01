@@ -117,16 +117,31 @@ function clearAndFillSelect(
 /**
  * Sets the status message and styling for model loading.
  *
- * @param {HTMLElement|null} statusEl The element displaying the status.
- * @param {string}           message  The message to display.
- * @param {boolean}          isError  Whether this is an error message.
+ * @param {HTMLElement|null}                   statusEl The element displaying the status.
+ * @param {string}                             message  The message to display.
+ * @param {boolean}                            isError  Whether this is an error message.
+ * @param {'loading'|'success'|'error'|string} [state]  Dynamic state class modifier.
  */
-function setStatus( statusEl: HTMLElement | null, message: string, isError: boolean ): void {
+function setStatus(
+	statusEl: HTMLElement | null,
+	message: string,
+	isError: boolean,
+	state?: 'loading' | 'success' | 'error' | string,
+): void {
 	if ( ! statusEl ) {
 		return;
 	}
 	statusEl.textContent = message || '';
-	statusEl.classList.toggle( 'openai-compatible-model-status--error', isError );
+	statusEl.classList.remove(
+		'openai-compatible-model-status--error',
+		'openai-compatible-model-status--loading',
+		'openai-compatible-model-status--success',
+	);
+	if ( state ) {
+		statusEl.classList.add( `openai-compatible-model-status--${ state }` );
+	} else {
+		statusEl.classList.toggle( 'openai-compatible-model-status--error', isError );
+	}
 }
 
 /**
@@ -429,8 +444,8 @@ function init(): void {
 	const fetchModels = ( overrideUrl: string | null ): void => {
 		const gen = ++fetchGeneration;
 
-		setStatus( textStatus, i18n.loading || 'Loading models...', false );
-		setStatus( imageStatus, i18n.loading || 'Loading models...', false );
+		setStatus( textStatus, i18n.loading || 'Loading models...', false, 'loading' );
+		setStatus( imageStatus, i18n.loading || 'Loading models...', false, 'loading' );
 
 		// Capture current select values before the async response arrives.
 		const currentTextModel = textModelSelect.value;
@@ -465,8 +480,8 @@ function init(): void {
 				clearAndFillSelect( imageModelSelect, imageModels, currentImageModel );
 
 				const loadedMsg = i18n.loaded || 'models loaded.';
-				setStatus( textStatus, `${ textModels.length } ${ loadedMsg }`, false );
-				setStatus( imageStatus, `${ imageModels.length } ${ loadedMsg }`, false );
+				setStatus( textStatus, `${ textModels.length } ${ loadedMsg }`, false, 'success' );
+				setStatus( imageStatus, `${ imageModels.length } ${ loadedMsg }`, false, 'success' );
 			} )
 			.catch( ( error: unknown ) => {
 				if ( gen !== fetchGeneration ) {
@@ -474,8 +489,8 @@ function init(): void {
 				}
 				const err = error as { message?: string } | null;
 				const message = ( err && err.message ) ? err.message : ( i18n.errorLoad || 'Could not load models from endpoint.' );
-				setStatus( textStatus, message, true );
-				setStatus( imageStatus, message, true );
+				setStatus( textStatus, message, true, 'error' );
+				setStatus( imageStatus, message, true, 'error' );
 			} );
 	};
 
