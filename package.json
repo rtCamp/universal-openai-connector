@@ -57,7 +57,8 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "wp-scripts plugin-zip"
+		"plugin-zip": "wp-scripts plugin-zip",
+		"i18n:pot": "wp i18n make-pot . languages/universal-openai-connector.pot --domain=universal-openai-connector --exclude=node_modules,vendor,tests"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",
