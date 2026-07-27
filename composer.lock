@@ -1121,11 +1121,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.0",
+            "version": "2.2.6",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b4cd98348c809924f62bb9cc8c047f5e73bc9a58",
-                "reference": "b4cd98348c809924f62bb9cc8c047f5e73bc9a58",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a6e9b5a9420f6109c091e87d82683bd1a80b87ed",
+                "reference": "a6e9b5a9420f6109c091e87d82683bd1a80b87ed",
                 "shasum": ""
             },
             "require": {
@@ -1181,7 +1181,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-28T08:22:43+00:00"
+            "time": "2026-07-26T21:22:49+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -1932,5 +1932,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
