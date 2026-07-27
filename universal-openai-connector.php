@@ -5,7 +5,7 @@
  * Description:       OpenAI-compatible provider for the WordPress AI Client with configurable endpoint and default text/image models.
  * Requires at least: 7.0
  * Requires PHP:      7.4
- * Version:           1.0.1
+ * Version:           1.1.0
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'UNIVERSAL_OPENAI_CONNECTOR_VERSION', '1.0.1' );
+define( 'UNIVERSAL_OPENAI_CONNECTOR_VERSION', '1.1.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_PHP_VERSION', '7.4' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION', '7.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

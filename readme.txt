@@ -3,7 +3,7 @@ Contributors:      rtcamp, milindmore22, vishal4669, aishwarryapande, aviralmitt
 Tags:              ai, openai, llm, text-generation, image-generation
 Requires at least: 7.0
 Tested up to:      7.0
-Stable tag:        1.0.1
+Stable tag:        1.1.0
 Requires PHP:      7.4
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -100,6 +100,15 @@ Generating images can take significant time on slow or self-hosted backends. The
 
 == Changelog ==
 
+= 1.1.0 =
+
+* Feature: Add filters `universal_openai_connector_models_url` and `universal_openai_connector_url` for dynamic endpoint routing in OpenAI connector.
+* Feature: Add is_image flag to models and improve UI filtering.
+* Refactor: admin settings to TypeScript and modernize build configuration.
+* Refactor: settings UI with improved design and alignment.
+* Refactor: update plugin URL constant definition to use plugin_dir_url.
+* Fixes : Update project dependencies and development tools
+
 = 1.0.1=
 
 * Feature : Add URL preset selector and reorganize settings assets
@@ -118,6 +127,6 @@ Generating images can take significant time on slow or self-hosted backends. The
 
 == Upgrade Notice ==
 
-= 1.0.1 =
+= 1.1.0 =
 
-Fixes: Term Generation and handles diffrent response format.
+Feature: Improved settings UI and added fixes.
