@@ -738,7 +738,7 @@ class OpenAiCompatibleSettings {
 	 *
 	 * @return array<mixed, mixed>
 	 */
-	private static function fetch_all_models(): array {
+	public static function fetch_all_models(): array {
 		$settings  = self::get_settings();
 		$endpoint  = rtrim( (string) $settings[ self::KEY_ENDPOINT_URL ], '/' );
 		$api_key   = self::get_api_key();
