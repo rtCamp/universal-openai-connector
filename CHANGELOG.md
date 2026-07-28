@@ -8,6 +8,7 @@
 - Modernize settings UI with improved design and alignment.
 - refactor: update plugin URL constant definition to use plugin_dir_url.
 - Update project dependencies and development tools
+- Fixes : Dynamically fetch and map models from endpoint for metadata resolution.
 
 ## 1.0.1
 
