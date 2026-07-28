@@ -26,7 +26,11 @@ use rtCamp\UniversalOpenAiConnector\Settings\OpenAiCompatibleSettings;
 class OpenAiCompatibleModelMetadataDirectory extends AbstractApiBasedModelMetadataDirectory {
 
 	/**
-	 * Returns metadata for selected text and image models.
+	 * Returns metadata for available models.
+	 *
+	 * Fetches all models returned by the configured endpoint and maps each model
+	 * to its appropriate ModelMetadata object (text, image, or combined).
+	 * Also ensures any configured effective text and image models are included.
 	 *
 	 * @since 1.0.0
 	 *
@@ -35,16 +39,37 @@ class OpenAiCompatibleModelMetadataDirectory extends AbstractApiBasedModelMetada
 	protected function sendListModelsRequest(): array {
 		$models_map = [];
 
+		$all_models = OpenAiCompatibleSettings::fetch_all_models();
+		foreach ( $all_models as $model ) {
+			if ( ! is_array( $model ) ) {
+				continue;
+			}
+
+			$model_id = isset( $model['id'] ) ? trim( (string) $model['id'] ) : '';
+			if ( '' === $model_id ) {
+				continue;
+			}
+
+			$is_image = ! empty( $model['is_image'] );
+			if ( $is_image ) {
+				$models_map[ $model_id ] = $this->createImageModelMetadata( $model_id );
+			} else {
+				$models_map[ $model_id ] = $this->createTextModelMetadata( $model_id );
+			}
+		}
+
 		$text_model = trim( OpenAiCompatibleSettings::get_effective_text_model() );
 		if ( '' !== $text_model ) {
-			$models_map[ $text_model ] = $this->createTextModelMetadata( $text_model );
+			if ( ! isset( $models_map[ $text_model ] ) ) {
+				$models_map[ $text_model ] = $this->createTextModelMetadata( $text_model );
+			}
 		}
 
 		$image_model = trim( OpenAiCompatibleSettings::get_effective_image_model() );
 		if ( '' !== $image_model ) {
-			if ( isset( $models_map[ $image_model ] ) ) {
+			if ( isset( $models_map[ $image_model ] ) && $image_model === $text_model ) {
 				$models_map[ $image_model ] = $this->createCombinedModelMetadata( $image_model );
-			} else {
+			} elseif ( ! isset( $models_map[ $image_model ] ) ) {
 				$models_map[ $image_model ] = $this->createImageModelMetadata( $image_model );
 			}
 		}

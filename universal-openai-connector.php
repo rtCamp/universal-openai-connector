@@ -1,12 +1,11 @@
 <?php
 /**
- * Plugin Name:       Universal Open AI Connector
+ * Plugin Name:       Universal OpenAI Connector
  * Plugin URI:        https://github.com/rtcamp/universal-openai-connector
  * Description:       OpenAI-compatible provider for the WordPress AI Client with configurable endpoint and default text/image models.
  * Requires at least: 7.0
  * Requires PHP:      7.4
- * Requires Plugins:  ai
- * Version:           1.0.1
+ * Version:           1.1.0
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later
@@ -24,11 +23,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'UNIVERSAL_OPENAI_CONNECTOR_VERSION', '1.0.1' );
+define( 'UNIVERSAL_OPENAI_CONNECTOR_VERSION', '1.1.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_PHP_VERSION', '7.4' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION', '7.0' );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_FILE', __FILE__ );
+define( 'UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once UNIVERSAL_OPENAI_CONNECTOR_PLUGIN_DIR . 'src/autoload.php';
 
@@ -63,7 +63,7 @@ function check_php_version(): bool {
 				requirement_notice(
 					sprintf(
 						/* translators: 1: required PHP version, 2: current PHP version */
-						__( 'The Universal Open AI Connector plugin requires PHP version %1$s or higher. You are running PHP version %2$s.', 'universal-openai-connector' ),
+						__( 'The Universal OpenAI Connector plugin requires PHP version %1$s or higher. You are running PHP version %2$s.', 'universal-openai-connector' ),
 						UNIVERSAL_OPENAI_CONNECTOR_MIN_PHP_VERSION,
 						PHP_VERSION
 					)
@@ -91,7 +91,7 @@ function check_wp_version(): bool {
 				requirement_notice(
 					sprintf(
 						/* translators: 1: required WordPress version, 2: current WordPress version */
-						__( 'The Universal Open AI Connector plugin requires WordPress version %1$s or higher. You are running WordPress version %2$s.', 'universal-openai-connector' ),
+						__( 'The Universal OpenAI Connector plugin requires WordPress version %1$s or higher. You are running WordPress version %2$s.', 'universal-openai-connector' ),
 						UNIVERSAL_OPENAI_CONNECTOR_MIN_WP_VERSION,
 						$wp_version
 					)
@@ -116,7 +116,7 @@ function check_ai_client(): bool {
 			'admin_notices',
 			static function () {
 				requirement_notice(
-					__( 'The Universal Open AI Connector plugin requires the WordPress AI Client (php-ai-client) to be installed.', 'universal-openai-connector' )
+					__( 'The Universal OpenAI Connector plugin requires the WordPress AI Client (php-ai-client) to be installed.', 'universal-openai-connector' )
 				);
 			}
 		);

@@ -1,4 +1,4 @@
-# Universal Open AI Connector - Connect Any OpenAI-Compatible API to WordPress
+# Universal OpenAI Connector - Connect Any OpenAI-Compatible API to WordPress
 
 **Contributors:** [rtCamp](https://profiles.wordpress.org/rtcamp/), [milindmore22](https://profiles.wordpress.org/milindmore22), [vishal4669](https://profiles.wordpress.org/vishal4669/), [aviralmittal89](https://profiles.wordpress.org/aviralmittal89/)
 
@@ -8,11 +8,11 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Overview
 
-Universal Open AI Connector registers an `openai_compatible` provider with the WordPress AI Client so that **any OpenAI-compatible API** can power AI features across WordPress — text generation, chat, and image generation included.
+Universal OpenAI Connector registers an `openai_compatible` provider with the WordPress AI Client so that **any OpenAI-compatible API** can power AI features across WordPress — text generation, chat, and image generation included.
 
 ## Description
 
-**Universal Open AI Connector** bridges the WordPress AI Client with any OpenAI-compatible REST API, allowing you to:
+**Universal OpenAI Connector** bridges the WordPress AI Client with any OpenAI-compatible REST API, allowing you to:
 
 * **Connect to any OpenAI-compatible endpoint** — official OpenAI, self-hosted, or third-party
 * **Generate text** using any LLM accessible through the configured endpoint
@@ -23,7 +23,7 @@ Universal Open AI Connector registers an `openai_compatible` provider with the W
 
 This makes it simple to integrate any OpenAI-compatible API into your WordPress site while keeping full control over which service and models you use.
 
-## Why Universal Open AI Connector?
+## Why Universal OpenAI Connector?
 
 Many teams need the flexibility to swap AI providers without being locked into a single service — for cost, privacy, compliance, or feature reasons. This plugin handles that by:
 
@@ -78,7 +78,7 @@ Any service that implements the OpenAI REST API (`/v1/chat/completions`, `/v1/im
 - **WordPress:** 7.0 or higher
 - **Requires at least:** 7.0
 - **Tested up to:** 7.0
-- **Stable tag:** 1.0.1
+- **Stable tag:** 1.1.0
 - **PHP:** 7.4 or higher
 - **Requires PHP:** 7.4
 - **Required Plugin:** [WordPress AI Client](https://wordpress.org/plugins/ai/) (`ai`) must be active
@@ -89,10 +89,10 @@ Any service that implements the OpenAI REST API (`/v1/chat/completions`, `/v1/im
 
 1. Ensure the **WordPress AI Client** plugin (`ai`) is installed and activated.
 2. Clone or download this plugin into `wp-content/plugins/universal-openai-connector`.
-3. Activate **Universal Open AI Connector** from the Plugins screen.
-4. Go to **Settings → Connectors** and enter your API key for the *Universal Open AI Connector* provider.
+3. Activate **Universal OpenAI Connector** from the Plugins screen.
+4. Go to **Settings → Connectors** and enter your API key for the *Universal OpenAI Connector* provider.
 ![screenshot-1](./wp-assets/screenshot-1.png)
-5. Go to **Settings → Universal Open AI Connector** and enter your **API Endpoint URL**.
+5. Go to **Settings → Universal OpenAI Connector** and enter your **API Endpoint URL**.
 ![screenshot-2](./wp-assets/screenshot-2.png)
 6. Optionally select a **Default Text Model** and **Default Image Model** from the auto-populated dropdowns.
 7. Save settings.
@@ -107,16 +107,16 @@ composer require rtcamp/universal-openai-connector
 
 ### Accessing the Settings
 
-Navigate to **Settings → Universal Open AI Connector** in your WordPress admin to configure the plugin.
+Navigate to **Settings → Universal OpenAI Connector** in your WordPress admin to configure the plugin.
 
-### Configuring Universal Open AI Connector
+### Configuring Universal OpenAI Connector
 
 #### Setting Up Authentication (Optional)
 
 For services that require an API key:
 
 1. Go to **Settings → Connectors**.
-2. Enter your API key under the *Universal Open AI Connector* provider and save.
+2. Enter your API key under the *Universal OpenAI Connector* provider and save.
 
 For local servers that do not require authentication, leave the field blank.
 
@@ -124,7 +124,7 @@ For local servers that do not require authentication, leave the field blank.
 
 The plugin connects to `https://api.openai.com/v1` by default. To use a different service:
 
-1. Navigate to **Settings → Universal Open AI Connector**.
+1. Navigate to **Settings → Universal OpenAI Connector**.
 2. Enter the base URL of your API in the **API Endpoint URL** field (e.g. `http://localhost:11434/v1` for Ollama).
 3. Save your settings.
 
@@ -132,7 +132,7 @@ You can also override the endpoint via the `OPENAI_COMPATIBLE_BASE_URL` environm
 
 #### Selecting Default Models
 
-1. Navigate to **Settings → Universal Open AI Connector**.
+1. Navigate to **Settings → Universal OpenAI Connector**.
 2. The **Default Text Model** and **Default Image Model** dropdowns are populated automatically by querying the `/models` endpoint of your configured API (responses are cached for one hour).
 3. Select models to use as defaults for AI Client requests routed to this provider.
 4. Leave fields empty to let the AI Client choose the model per request.
@@ -163,7 +163,7 @@ $result = Prompt_Builder::create()
 
 #### WordPress Ability
 
-You can use Universal Open AI Connector for any WordPress AI Client feature that supports text generation, such as:
+You can use Universal OpenAI Connector for any WordPress AI Client feature that supports text generation, such as:
 
 ![screenshot-3](./wp-assets/screenshot-3.png)
 
@@ -194,7 +194,7 @@ $result = Prompt_Builder::create()
 
 #### WordPress Ability
 
-You can use Universal Open AI Connector for any WordPress AI Client feature that supports image generation.
+You can use Universal OpenAI Connector for any WordPress AI Client feature that supports image generation.
 ![screenshot-4](./wp-assets/screenshot-4.png)
 
 ### Multimodal (Vision) Input
@@ -214,7 +214,7 @@ $result = Prompt_Builder::create()
 
 #### WordPress Ability
 
-You can use Universal Open AI Connector's vision capabilities in any WordPress AI Client feature that supports image input, such as:
+You can use Universal OpenAI Connector's vision capabilities in any WordPress AI Client feature that supports image input, such as:
 
 - Alt text generation
 - Image captioning / analysis
@@ -260,7 +260,7 @@ When the configured endpoint URL does **not** contain `api.openai.com`, the plug
 
 ## Development & Contributing
 
-Universal Open AI Connector is actively developed and maintained by [rtCamp](https://rtcamp.com/).
+Universal OpenAI Connector is actively developed and maintained by [rtCamp](https://rtcamp.com/).
 
 - **Repository:** [https://github.com/rtcamp/universal-openai-connector](https://github.com/rtcamp/universal-openai-connector)
 
@@ -323,7 +323,7 @@ Yes. Any endpoint that implements `/v1/images/generations` is supported. Configu
 
 ### Can I change the API endpoint?
 
-Yes. Enter the full base URL in **Settings → Universal Open AI Connector → API Endpoint URL**, or set the `OPENAI_COMPATIBLE_BASE_URL` environment variable. The environment variable takes priority.
+Yes. Enter the full base URL in **Settings → Universal OpenAI Connector → API Endpoint URL**, or set the `OPENAI_COMPATIBLE_BASE_URL` environment variable. The environment variable takes priority.
 
 ### Why does text generation sometimes time out?
 
@@ -331,7 +331,7 @@ Large models can take significant time to respond, especially on self-hosted har
 
 ### Is multisite supported?
 
-The plugin can be network-activated on multisite. Each site's settings are managed independently via their own **Settings → Universal Open AI Connector** page.
+The plugin can be network-activated on multisite. Each site's settings are managed independently via their own **Settings → Universal OpenAI Connector** page.
 
 ## Troubleshooting
 
